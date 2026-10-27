@@ -1,0 +1,98 @@
+/* §11 — esqueleto de la ficha: mismas cajas y mismo layout que
+   FichaProducto (cero CLS). Los overrides por `className` siguen el patrón
+   de SkeletonTarjeta (`.meta`/`.precio`): el módulo propio se importa después
+   del módulo de `Skeleton`, así que gana el empate de especificidad. */
+
+.ficha {
+  display: grid;
+  gap: var(--space-5);
+  padding-block: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .ficha {
+    gap: var(--space-6);
+  }
+}
+
+.migas {
+  width: 30%;
+}
+
+.cuerpo {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .cuerpo {
+    gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cuerpo {
+    grid-template-columns: 1.1fr 0.9fr;
+    column-gap: var(--space-6);
+    align-items: start;
+  }
+}
+
+/* Media `1/1` de §3.2 (sobrescribe el 4/5 de `Skeleton variante="imagen"`) */
+.media {
+  aspect-ratio: 1 / 1;
+}
+
+.detalle {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .detalle {
+    gap: var(--space-6);
+  }
+}
+
+.marca {
+  width: 35%;
+}
+
+.meta {
+  width: 55%;
+}
+
+/* Bloque de precio: la caja final es `--font-size-price` × `--line-height-tight` */
+.precio {
+  width: 45%;
+  height: calc(var(--font-size-price) * var(--line-height-tight));
+}
+
+.cta {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+/* CTA: altura real del botón (`--touch-target`) para no desplazar la ayuda */
+.boton {
+  width: min(240px, 100%);
+  height: var(--touch-target);
+}
+
+.apoyo {
+  width: 70%;
+}
+
+.lineas {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.lineaMedia {
+  width: 85%;
+}
+
+.lineaCorta {
+  width: 60%;
+}

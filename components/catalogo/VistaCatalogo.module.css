@@ -1,0 +1,31 @@
+/* estados-y-responsividad §2 — anatomía de /catalogo:
+   h1 → buscador → barra de resultados → chips → rejilla/estado. */
+
+.vista {
+  display: grid;
+  gap: var(--space-5);
+  padding-block: var(--space-6);
+}
+
+/* Barra de resultados (§2.1.3): conteo a la izquierda, «Ordenar» a la derecha;
+   `flex-wrap` para que en pantallas estrechas el selector baje de línea. */
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-4);
+}
+
+.conteo {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+/* Región de resultados: lleva `aria-busy` durante la transición (§11). */
+.resultados {
+  display: grid;
+  gap: var(--space-5);
+}

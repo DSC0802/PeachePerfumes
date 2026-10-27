@@ -1,0 +1,28 @@
+/* §8 de componentes.md — Rejilla mobile-first: 2 → 3 (≥768) → 4 (≥1024).
+   `minmax(0, 1fr)` evita desbordes por nombres largos; el hueco de 140px es
+   la salvaguarda de §8 para anchos útiles < 320px. */
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  align-items: stretch;
+}
+
+@media (max-width: 351px) {
+  .rejilla {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .rejilla {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .rejilla {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,47 @@
+/* §5 de componentes.md — Navegación. Estado activo: aria-current + texto
+   con subrayado 2px (--focus-width) en --color-accent; sin aria-current,
+   no se marca. El anillo de foco lo aplica globals.css. */
+
+.lista {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navegacion--vertical .lista {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding-inline: var(--space-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-in-out);
+}
+
+.enlace:hover {
+  color: var(--color-text);
+}
+
+.enlace:active {
+  color: var(--color-accent-active);
+}
+
+.enlace[aria-current="page"] {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: var(--focus-width);
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}

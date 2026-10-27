@@ -1,0 +1,53 @@
+/* §11 de componentes.md — Skeleton. Sin shimmer de gradiente: sólo pulso de
+   opacidad con duración derivada de la escala (1.2s = --duration-slow * 3). */
+
+.skeleton {
+  display: block;
+  background-color: var(--color-skeleton);
+  border-radius: var(--radius);
+  animation: skeleton-pulso calc(var(--duration-slow) * 3) var(--ease-in-out) infinite;
+}
+
+/* Cajas exactas por elemento (tabla §11) */
+.skeleton--imagen {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+}
+
+.skeleton--nombre {
+  height: 1.2em;
+  width: 70%;
+}
+
+.skeleton--precio {
+  height: 1em;
+  width: 40%;
+}
+
+.skeleton--titulo {
+  height: 2.4em;
+  width: 60%;
+}
+
+.skeleton--linea {
+  height: 1em;
+  width: 100%;
+}
+
+@keyframes skeleton-pulso {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Regla obligatoria de §11: la animación usa su propio tiempo (1.2s), así que
+   se apaga explícitamente con movimiento reducido. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

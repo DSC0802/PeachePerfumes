@@ -1,0 +1,6 @@
+/* Cierre de la ficha: el enlace de vuelta deja aire antes del pie
+   (el pie ya aporta su propio `padding-block`). */
+
+.volver {
+  padding-block-end: var(--space-6);
+}

@@ -1,0 +1,161 @@
+/* Carrito de compras (demo). Sólo tokens de diseño; cero hex sueltos. */
+
+.lista {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.item {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  align-items: start;
+}
+
+.imagen {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 80px;
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.imagen .marco {
+  width: 100%;
+  height: 100%;
+}
+
+.datos {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.nombre {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.precioUnitario {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cantidad {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.botonAjuste {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.botonAjuste:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.botonAjuste:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+.cantidadNumero {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  min-width: var(--space-4);
+  text-align: center;
+}
+
+.resumen {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.totalFila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.totalEtiqueta {
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.totalImporte {
+  margin: 0;
+  font-size: var(--font-size-price);
+  display: inline-block;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.microcopy {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-label);
+  color: var(--color-text-muted);
+  max-width: 42ch;
+}
+
+@media (min-width: 640px) {
+  .item {
+    grid-template-columns: 64px 1fr auto auto auto auto;
+    align-items: center;
+  }
+  .imagen {
+    width: 72px;
+    height: 90px;
+  }
+  .acciones {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .microcopy {
+    max-width: 30ch;
+    text-align: right;
+  }
+}

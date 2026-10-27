@@ -1,0 +1,37 @@
+/* §4 de componentes.md — Etiqueta / Badge. Sólo `default` (no interactivo). */
+
+.badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-label);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.badge--acento {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
+}
+
+.badge--neutral {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+
+.badge--success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge--error {
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.badge--info {
+  background-color: var(--color-info-bg);
+  color: var(--color-info);
+}

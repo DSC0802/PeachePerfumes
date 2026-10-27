@@ -1,0 +1,81 @@
+/* Navegación de portada a /catalogo?categoria=… y ?familia=… — mismo
+   lenguaje de chip que los filtros de §2.1 (surface + border-strong,
+   activo acento), pero como enlace: subrayado no hace falta porque el
+   borde ya lo separa, y el color de acento al pasar indica "navega". */
+
+.seccion {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.titulo {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text);
+}
+
+.entradilla {
+  max-width: var(--container-narrow);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+.grupo {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.subtitulo {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-fast) var(--ease-in-out);
+}
+
+.chip:hover {
+  background-color: var(--color-surface-alt);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Elemento no crítico: escala mínima permitida por identidad §12 */
+.chip:active {
+  transform: scale(0.99);
+}
+
+/* :visited queda igual (regla §3: el acento ya identifica al enlace);
+   el anillo de foco lo aplica globals.css. */

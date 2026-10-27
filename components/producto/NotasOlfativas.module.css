@@ -1,0 +1,42 @@
+/* §3.2 — pirámide olfativa en la columna derecha: apilada y con cada grupo
+   encabezado (salida / corazón / fondo) para que cada capa sea legible por
+   separado, también en lectura por encabezados. */
+
+.piramide {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.titulo {
+  font-size: var(--font-size-h3);
+}
+
+.grupos {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.grupo {
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Rótulo de grupo con estética de etiqueta (tokens de §4: xs/sm, wide,
+   muted): el peso semántico lo aporta el `h3`, no el tamaño */
+.subtitulo {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.lista {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-inline-start: var(--space-5);
+  line-height: var(--line-height-body);
+}

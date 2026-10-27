@@ -1,0 +1,19 @@
+/* Patrón contenedor: ancho máximo + padding responsive por tokens (§8). */
+
+.contenedor {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+.contenedor--maximo {
+  max-width: var(--container-max);
+}
+
+.contenedor--estrecho {
+  max-width: var(--container-narrow);
+}
+
+.contenedor--ancho {
+  max-width: var(--container-wide);
+}

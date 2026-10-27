@@ -1,0 +1,58 @@
+/* §14 de componentes.md — marco de imagen. Nunca `filter`, `mix-blend-mode`
+   ni `opacity < 1` sobre la foto; la elevación/contraste lo da el contenedor. */
+
+.marco {
+  position: relative;
+  overflow: hidden;
+  /* Respaldo mientras carga y frente al fondo oscuro (§14.2) */
+  background-color: var(--color-surface-alt);
+}
+
+/* Recorte fijo por contexto (§14.3) */
+.marco--tarjeta {
+  aspect-ratio: 4 / 5;
+}
+
+.marco--hero {
+  aspect-ratio: 16 / 9;
+}
+
+.marco--editorial {
+  aspect-ratio: 3 / 2;
+}
+
+.marco--ficha {
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 768px) {
+  .marco--hero {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+.foto {
+  object-fit: cover;
+  /* el frasco queda centrado alto (§14.3) */
+  object-position: 50% 40%;
+}
+
+/* Placeholder de imagen: imagotipo provisional centrado, sin texto de error */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--color-brand-provisional);
+}
+
+.imagotipo {
+  width: 40%;
+  height: auto;
+}
+
+.imagotipo text {
+  font-family: var(--font-brand-serif);
+  font-weight: var(--font-weight-bold);
+  fill: currentColor;
+}

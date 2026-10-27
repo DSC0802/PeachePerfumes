@@ -1,0 +1,20 @@
+/* Banda del aviso de datos demo (arquitectura §6 / R3): única en la portada,
+   pegada bajo la cabecera. Par de tokens warning ya validado para el banner
+   offline (estados §4.4); el aviso se apoya en texto, no sólo en el color. */
+
+.aviso {
+  border-block-end: var(--border-width) solid var(--color-border);
+  background-color: var(--color-warning-bg);
+  padding-block: var(--space-3);
+}
+
+.texto {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-label);
+  color: var(--color-text);
+}
+
+.titulo {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-warning);
+}

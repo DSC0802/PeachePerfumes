@@ -1,0 +1,15 @@
+/* Ritmo de la portada: un paso de espacio entre bloques (mobile-first) y
+   aire sobrio antes del pie. Sin estilos propios de sección: cada bloque
+   trae los suyos. */
+
+.portada {
+  display: grid;
+  gap: var(--section-gap);
+  padding-block: var(--space-7) var(--space-9);
+}
+
+@media (min-width: 768px) {
+  .portada {
+    padding-block: var(--space-8) var(--space-10);
+  }
+}

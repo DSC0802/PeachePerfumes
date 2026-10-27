@@ -1,0 +1,5 @@
+/* estados-y-responsividad §2.1.1 — h1 "Catálogo" con tamaño `--font-size-h2`. */
+
+.titulo {
+  font-size: var(--font-size-h2);
+}

@@ -1,0 +1,110 @@
+/* §2.1/§2.3 de estados-y-responsividad.md — Chips de familia y categoría +
+   trigger móvil.
+   Chip inactivo: surface + border-strong; activo: accent-subtle + acento. */
+
+.filtros {
+  display: block;
+}
+
+.escritorio {
+  display: none;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out),
+    transform var(--duration-fast) var(--ease-in-out);
+}
+
+.chip:hover {
+  background-color: var(--color-surface-alt);
+}
+
+/* Elemento no crítico: escala mínima permitida por identidad §12 */
+.chip:active {
+  transform: scale(0.99);
+}
+
+.chip--activa,
+.chip--activa:hover {
+  background-color: var(--color-accent-subtle);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out);
+}
+
+.trigger:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.trigger:active {
+  background-color: var(--color-bg-disabled);
+}
+
+.grupoTitulo {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  line-height: var(--line-height-label);
+  color: var(--color-text-muted);
+}
+
+/* Segundo grupo (Categoría) bajo Familia: escritorio y hoja, mismos hermanos */
+.grupo + .grupo {
+  margin-top: var(--space-4);
+}
+
+/* «Limpiar filtros» (escritorio) bajo los chips */
+.limpiar {
+  margin-top: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .escritorio {
+    display: block;
+  }
+
+  .trigger {
+    display: none;
+  }
+}

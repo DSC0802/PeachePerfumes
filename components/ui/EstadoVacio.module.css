@@ -1,0 +1,48 @@
+/* §9 de componentes.md — Estado vacío. */
+
+.estado {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-block: var(--space-8);
+  text-align: center;
+}
+
+.estado--inline {
+  padding-block: var(--space-5);
+}
+
+.icono {
+  display: inline-flex;
+  color: var(--color-text-subtle);
+}
+
+.titulo {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text);
+}
+
+/* Cuando es el encabezado principal de la página (404), sube un paso */
+.titulo--h1 {
+  font-size: var(--font-size-h2);
+}
+
+.apoyo {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+.accion {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}

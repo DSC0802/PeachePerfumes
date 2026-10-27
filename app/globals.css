@@ -1,0 +1,385 @@
+/**
+ * Peache Perfumes — tokens del sistema de diseño (Fase 1)
+ * ------------------------------------------------------
+ * Fuente única de verdad para la Fase 2. Todo valor de color, tipografía,
+ * espaciado, layout, radio, sombra, movimiento y capa vive aquí.
+ *
+ * Reglas de este archivo:
+ *  - Los hex SOLO aparecen dentro de `:root` (modo claro) y
+ *    `[data-theme="dark"]` (modo oscuro). Ambos bloques declaran la MISMA
+ *    lista de tokens.
+ *  - Escala tipográfica con razón única 1.25; una sola escala de espacio
+ *    (base 4px); un único radio (4px); dos sombras; tres duraciones;
+ *    dos easings; seis niveles de z-index (base + cinco capas).
+ *  - CSS plano, sin preprocesadores, sin dependencias.
+ *
+ * Breakpoints (referencia para los @media de componentes, mobile-first):
+ *   base = 0 · sm = 640px · md = 768px · lg = 1024px
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ============================================================
+     COLOR — modo claro (ratios verificados en identidad.md §5)
+     ============================================================ */
+
+  /* Superficies */
+  --color-bg: #faf8f6;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1ede9;
+  --color-bg-disabled: #ece7e1;
+  --color-overlay: rgba(27, 23, 20, 0.55);
+
+  /* Texto */
+  --color-text: #1b1714;
+  --color-text-muted: #5c554e;
+  --color-text-subtle: #6e675f;
+  --color-text-placeholder: #6e675f;
+  --color-text-disabled: #8b837b;
+
+  /* Bordes */
+  --color-border: #e7e2dc;
+  --color-border-strong: #867d74;
+  --color-border-disabled: #d3ccc5;
+
+  /* Acento (derivado del rosa de marca, oscurecido hasta AA) */
+  --color-accent: #b0485c;
+  --color-accent-hover: #98394d;
+  --color-accent-active: #7f2f41;
+  --color-accent-subtle: #f7eaed;
+  --color-on-accent: #ffffff;
+  --color-focus: #b0485c;
+
+  /* Estados funcionales */
+  --color-success: #1f7a4d;
+  --color-success-bg: #e6f2ea;
+  --color-error: #b3261e;
+  --color-error-bg: #fbeae8;
+  --color-warning: #8a5a00;
+  --color-warning-bg: #f8efdf;
+  --color-info: #1a5b8a;
+  --color-info-bg: #e7f0f7;
+
+  /* Carga y marca provisional */
+  --color-skeleton: #ede8e2;
+  --color-brand-provisional: #c9788a;
+
+  /* ============================================================
+     TIPOGRAFÍA — familias del sistema (cero descargas)
+     ============================================================ */
+
+  --font-serif: Georgia, "Iowan Old Style", "Times New Roman", "Noto Serif", serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  /* Wordmark provisional: se sustituye cuando el cliente entregue logo final */
+  --font-brand-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+
+  /* Escala: razón 1.25 (16 → 20 → 25 → 31.25 → 39.06 → 48.83 → 61.04) */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-body: 1rem;
+  --font-size-body-lg: clamp(1rem, 1.05rem + 0.4vw, 1.25rem);
+  --font-size-h4: clamp(1.25rem, 1.15rem + 0.5vw, 1.5625rem);
+  --font-size-h3: clamp(1.5625rem, 1.4rem + 0.8vw, 1.9531rem);
+  --font-size-h2: clamp(1.9531rem, 1.7rem + 1.2vw, 2.4414rem);
+  --font-size-h1: clamp(2.4414rem, 2rem + 1.8vw, 3.0518rem);
+  --font-size-display: clamp(3.0518rem, 2.4rem + 3vw, 3.8147rem);
+  --font-size-price: clamp(1.5625rem, 1.45rem + 0.7vw, 1.9531rem);
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.1;
+  --line-height-heading: 1.2;
+  --line-height-label: 1.4;
+  --line-height-body: 1.6;
+  --line-height-relaxed: 1.75;
+
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.06em;
+  --letter-spacing-brand: 0.3em;
+
+  /* ============================================================
+     ESPACIO — escala única, base 4px
+     ============================================================ */
+
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 80px;
+  --space-11: 96px;
+  --space-12: 128px;
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+
+  --container-max: 72rem;
+  --container-narrow: 42rem;
+  --container-wide: 84rem;
+  --container-padding: 16px;
+  --section-gap: var(--space-9);
+  --grid-gap: var(--space-4);
+  --header-height: 64px;
+  --touch-target: 44px;
+
+  /* ============================================================
+     FORMA — un único radio en todo el sistema
+     ============================================================ */
+
+  --radius: 4px;
+  --border-width: 1px;
+  --focus-width: 2px;
+  --focus-offset: 2px;
+
+  /* Dos sombras, máximo */
+  --shadow-1: 0 1px 2px rgb(27 23 20 / 0.06), 0 1px 1px rgb(27 23 20 / 0.04);
+  --shadow-2: 0 8px 24px rgb(27 23 20 / 0.1);
+
+  /* ============================================================
+     MOVIMIENTO — tres duraciones, dos easings
+     ============================================================ */
+
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ============================================================
+     CAPAS — seis tokens (base + cinco capas), nada suelto por encima de 500
+     ============================================================ */
+
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ==============================================================
+   MODO OSCURO — misma lista de tokens que `:root`.
+   La elevación viene de superficies más claras, no de sombras
+   más oscuras; las fotos nunca se filtran (identidad.md §10).
+   ============================================================== */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Superficies (orden de luminosidad creciente: la elevación se lee sin sombra) */
+  --color-bg: #16130f;
+  --color-surface: #1e1a17;
+  --color-surface-alt: #262119;
+  --color-bg-disabled: #242019;
+  --color-overlay: rgba(0, 0, 0, 0.65);
+
+  /* Texto */
+  --color-text: #f2eee8;
+  --color-text-muted: #aba299;
+  --color-text-subtle: #948b83;
+  --color-text-placeholder: #948b83;
+  --color-text-disabled: #746c65;
+
+  /* Bordes */
+  --color-border: #332e29;
+  --color-border-strong: #7a7169;
+  --color-border-disabled: #332e29;
+
+  /* Acento aclarado para mantener AA sobre fondos oscuros;
+     on-accent se invierte a oscuro */
+  --color-accent: #e79aa8;
+  --color-accent-hover: #f2afbb;
+  --color-accent-active: #f7c3cc;
+  --color-accent-subtle: #2e2126;
+  --color-on-accent: #241a1d;
+  --color-focus: #e79aa8;
+
+  /* Estados funcionales */
+  --color-success: #7bcf9e;
+  --color-success-bg: #17251d;
+  --color-error: #f0918a;
+  --color-error-bg: #2a1a18;
+  --color-warning: #dfb15c;
+  --color-warning-bg: #2a2315;
+  --color-info: #8fc0e4;
+  --color-info-bg: #17222b;
+
+  /* Carga y marca provisional */
+  --color-skeleton: #2a251f;
+  --color-brand-provisional: #d98c99;
+
+  /* Sombras: aquí solo sostienen; la separación real la dan las superficies */
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 8px 24px rgb(0 0 0 / 0.5);
+}
+
+/* ==============================================================
+   RESPONSIVE — tokens de layout por breakpoint (mobile-first).
+   Los hex no se tocan aquí: solo layout.
+   ============================================================== */
+
+@media (min-width: 640px) {
+  :root {
+    --container-padding: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 72px;
+    --grid-gap: var(--space-5); /* 24px */
+    --section-gap: var(--space-10); /* 80px */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 32px;
+    --grid-gap: var(--space-6); /* 32px */
+    --section-gap: var(--space-11); /* 96px */
+  }
+}
+
+/* ==============================================================
+   MOVIMIENTO REDUCIDO — duraciones casi nulas. Como todo el sistema
+   transiciona con estas variables, ningún componente puede quedar
+   fuera. Ninguna información depende de la animación.
+   ============================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}
+
+
+/* ===============================================================
+   Peache Perfumes — base de elementos (Fase 1)
+   Copia operativa: los tokens de arriba proceden literalmente de
+   docs/design/tokens.css (fuente única de verdad). Si cambia ese
+   archivo, se vuelca aquí — no se edita el bloque de tokens a mano.
+   =============================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+a {
+  color: inherit;
+}
+
+/* Foco visible SIEMPRE — nunca `outline: none` (identidad.md §7) */
+:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+::selection {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-text);
+}
+
+/* Enlace de salto: primer foco de la página (arquitectura §8) */
+.saltar-al-contenido {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: var(--z-toast);
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.saltar-al-contenido:focus-visible {
+  transform: translateY(0);
+}
+
+/* Utilidad global para texto sólo visible por lectores de pantalla */
+.solo-lectura {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,58 @@
+/* §6 de componentes.md — Pie. Apilado en móvil, 3 columnas en ≥768px. */
+
+.pie {
+  background-color: var(--color-surface-alt);
+  border-top: var(--border-width) solid var(--color-border);
+  padding-block: var(--space-8);
+}
+
+.interior {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.marca {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+.lineaDescriptiva {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+.enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Target táctil también en los enlaces del pie (regla global §1) */
+.enlaces a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+}
+
+.copyright {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-label);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+  .pie {
+    padding-block: var(--space-9);
+  }
+
+  .interior {
+    grid-template-columns: 1fr auto auto;
+    gap: var(--space-6);
+    align-items: start;
+  }
+}

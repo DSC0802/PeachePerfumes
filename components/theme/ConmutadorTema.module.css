@@ -1,0 +1,35 @@
+/* §13 de componentes.md — Selector de tema. Target --touch-target × --touch-target,
+   icono 20px centrado; nunca se oculta en ningún breakpoint. */
+
+.tema {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-in-out),
+    color var(--duration-base) var(--ease-in-out);
+}
+
+.tema:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-accent);
+}
+
+.tema:active {
+  background-color: var(--color-bg-disabled);
+}
+
+.icono {
+  width: var(--space-5);
+  height: var(--space-5);
+  /* cambio del SVG sin animación de rotación: sólo opacidad (§13) */
+  transition: opacity var(--duration-fast) var(--ease-in-out);
+}

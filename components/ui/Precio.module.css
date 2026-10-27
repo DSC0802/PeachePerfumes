@@ -1,0 +1,33 @@
+/* §10 de componentes.md — Precio. Nunca color de enlace: el precio no navega. */
+
+.precio {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.precio--ficha {
+  font-size: var(--font-size-price);
+}
+
+.precio--tarjeta {
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-heading);
+  /* Columnas de precios alineadas en listas/tarjetas */
+  font-variant-numeric: tabular-nums;
+}
+
+.precio--nota {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-body);
+}
+
+.nota {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
