@@ -6,7 +6,7 @@ export type VariantePrecio = "ficha" | "tarjeta" | "nota";
 export interface PrecioProps {
   /** Valor numérico en unidades de la moneda (sin símbolo). */
   valor: number;
-  /** Código ISO de la moneda del producto (dato del producto). Defecto: CUP. */
+  /** Código ISO de la moneda del producto (dato del producto). Defecto: USD. */
   moneda?: string;
   variante?: VariantePrecio;
   /** Nota bajo el precio, sólo si el negocio la define (§10). */
@@ -42,7 +42,7 @@ function formatear(valor: number, moneda: string): string {
 
 export default function Precio({
   valor,
-  moneda = "CUP",
+  moneda = "USD",
   variante = "tarjeta",
   nota,
   className,

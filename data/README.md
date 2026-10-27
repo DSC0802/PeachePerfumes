@@ -15,8 +15,8 @@
 - **Marcas inventadas** (Casa Palma, Villa Coral, Orquídea Negra, Jazmín y Cobre,
   Taller Mangle). No corresponde a ningún fabricante real: usar marcas reales de
   perfumería es un riesgo de marca ya identificado en `docs/arquitectura.md` §6.
-- **Precios de demostración en CUP**, sin relación con ningún precio real. La
-  moneda y la política de precios reales son una decisión pendiente
+- **Precios de demostración en USD (D5)**, sin relación con ningún precio real. La
+  política de precios reales sigue pendiente
   (`docs/arquitectura.md` §12, D5): no mostrar estos importes como definitivos.
 - **Disponibilidad, banderas y taxonomía inventadas**: los estados
   `destacado`/`novedad` y las categorías se han elegido para que la landing y los

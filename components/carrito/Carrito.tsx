@@ -9,7 +9,7 @@ import MarcoImagen from "@/components/ui/MarcoImagen";
 import Precio from "@/components/ui/Precio";
 import styles from "./Carrito.module.css";
 
-const MONEDA_DEFECTO = "CUP";
+const MONEDA_DEFECTO = "USD";
 
 const MICROCOPY_PAGO =
   "La compra online estará disponible próximamente. Contáctanos por WhatsApp.";

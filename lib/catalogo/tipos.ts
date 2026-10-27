@@ -2,7 +2,7 @@
  * DATOS DE DEMOSTRACIÓN: este tipo es el contrato estable del dominio.
  * Se mantiene idéntico cuando se pase a API real (ver docs/api-contracto.md).
  */
-export type Moneda = "CUP";
+export type Moneda = "USD";
 
 export type OrdenCatalogo =
   | "destacados"
@@ -37,7 +37,7 @@ export interface Producto {
   tamano: string;
   /** Volumen numérico en ml, para ordenar/filtrar sin parsear texto. */
   tamanoMl: number;
-  /** Precio en unidades de la moneda, sin símbolo. Ej: 2500. Decimales permitidos. */
+  /** Precio en unidades de la moneda, sin símbolo. Ej: 47. Decimales permitidos. */
   precio: number;
   moneda: Moneda;
   /** Párrafo de venta, 1–3 frases. */

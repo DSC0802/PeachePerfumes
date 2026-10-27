@@ -159,8 +159,8 @@ describe("ordenación (los 5 valores de OrdenCatalogo)", () => {
     for (let i = 1; i < productos.length; i++) {
       expect(productos[i - 1].precio).toBeLessThanOrEqual(productos[i].precio);
     }
-    expect(productos[0].nombre).toBe("Rosa de Batey"); // 1350 CUP
-    expect(productos[productos.length - 1].nombre).toBe("Ébano"); // 4500 CUP
+    expect(productos[0].nombre).toBe("Rosa de Batey"); // 25 USD
+    expect(productos[productos.length - 1].nombre).toBe("Ébano"); // 89 USD
   });
 
   it("precio-desc: precios no crecientes sin perder productos", async () => {
