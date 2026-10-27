@@ -42,7 +42,7 @@ Documento vivo: si algo no refleja lo que quieres, se corrige aquí **antes** de
 | HU-20 | Como admin, quiero ver la lista de productos con su estado y stock. | 🆕 |
 | HU-21 | Como admin, quiero **crear** un producto (nombre, slug, precio USD, categoría, familia, notas olfativas, stock, descripción, imágenes). | 🆕 |
 | HU-22 | Como admin, quiero **editar** cualquier campo de un producto existente. | 🆕 |
-| HU-23 | Como admin, quiero **eliminar** un producto. | 🆕 *(¿borrado físico o «oculto»? — ver Pendientes)* |
+| HU-23 | Como admin, quiero **ocultar** un producto (el «Eliminar» del Dashboard lo saca de la tienda y de la lista, pero se conserva en la BD y se puede restaurar). **Decidido 27/10/2026: ocultar, sin borrado físico.** | 🆕 |
 | HU-24 | Como admin, quiero cambiar el **estado** del producto: `activo` · `agotado` · `descontinuado` (propuesta: añadir `borrador`). | 🆕 |
 | HU-25 | Como admin, quiero subir y gestionar las imágenes del producto. | 🆕 *(¿dónde se almacenan? — ver Pendientes)* |
 | HU-26 | Como sistema, quiero que el catálogo público muestre **sólo** productos `activo`. | 🆕 |
@@ -103,7 +103,7 @@ Documento vivo: si algo no refleja lo que quieres, se corrige aquí **antes** de
 
 1. **Servicio de email** (HU-13, HU-42, HU-43, HU-44): sin dominio ni proveedor no hay envío. *No se elige hasta que decidas dónde vive la infraestructura.*
 2. **Almacenamiento de imágenes** (HU-25): ¿storage del proveedor cloud o archivos locales?
-3. **Borrado de productos** (HU-23): ¿físico (desaparece del histórico) u oculto (conserva pedidos)?
+3. ~~**Borrado de productos** (HU-23)~~ → **Resuelto 27/10/2026: ocultar, sin borrado físico.**
 4. **Alcance de exportación de reportes** (HU-58): ¿CSV ahora o más adelante?
 5. **Estados exactos de pedido** (HU-37): la lista es una propuesta, confírmala o cámbiala.
 

@@ -81,7 +81,7 @@ Verificación tras los fixes: typecheck 0 · lint 0 · build 0 · vitest 24/24 �
 
 | ID | Decisión | Valor acordado |
 |---|---|---|
-| **D1** | Base de datos | **Deroga la decisión anterior («empezar sin DB»): sí hay BD y será «en la nube».** El proveedor concreto (Supabase / Neon / Firebase / otro) **pendiente de elección explícita del cliente** — no se auto-selecciona. |
+| **D1** | Base de datos | **Deroga la decisión anterior («empezar sin DB»): sí hay BD y es PostgreSQL.** *(27/10/2026)* **PostgreSQL local ahora → en la nube después**: se instala en la máquina del cliente (instalación pendiente de permiso explícito) mientras dure el D4 (todo en local); migrar a la nube después = cambiar `DATABASE_URL`, el motor y el código no cambian. Se descartó Supabase por ahora: es empresa de EE.UU. y su acceso desde Cuba no pudo verificarse. |
 | **D2** | Autenticación | **Login completo.** El Dashboard es **sólo del administrador** y debe: recibir **notificación cuando un cliente compre**, crear productos, eliminarlos, actualizar sus estados, llevar la economía y generar reportes. Alcance a planificar en la Fase 3. |
 | **D3** | Pagos/cobro | **Pago manual + WhatsApp** — sin pasarela automática. |
 | **D4** | Hosting + dominio | **Ejecución en local** por ahora; dominio y despliegue cuando el cliente compre uno. |
