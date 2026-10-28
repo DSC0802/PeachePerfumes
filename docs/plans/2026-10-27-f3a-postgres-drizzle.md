@@ -731,6 +731,8 @@ export const repositorioPostgres: CatalogoRepositorio = {
 
 **Verificación:** `npm run typecheck` → 0 · `npm run lint` → 0 (el archivo aún no se ejecuta: el conmutador sigue en `demo`; el comportamiento se prueba en T11).
 
+> **Nota de ejecución (28/10/2026):** `listarRelacionados(slug, limite)` se declara **sin** `= 4` (la «Nota A» del bloque C5), por la misma razón que la nota de ejecución de T6: el defecto `limite = 4` vive SOLO en `filtro.ts` y así el demo y el Postgres no pueden divergir.
+
 ### T9 · Conmutador `FUENTE_CATALOGO` + `.env.local`
 
 **Modificar `lib/catalogo/index.ts` completo:**
@@ -790,6 +792,8 @@ import EstadoVacio from "@/components/ui/EstadoVacio";
  * lee catálogo) y para toda ruta sin su propio error.tsx. Igual patrón que
  * `app/catalogo/error.tsx`: `reset()` rehace el render sin recargar y no hay
  * fallback a datos demo — un fallo de BD se muestra, no se maquilla.
+ * `nivelTitulo="h1"`: a diferencia del catálogo (donde `TituloCatalogo`
+ * aporta el h1), la raíz no tiene ningún encabezado de nivel 1 propio.
  */
 export default function ErrorRaiz({
   reset,
@@ -800,6 +804,7 @@ export default function ErrorRaiz({
   return (
     <Contenedor>
       <EstadoVacio
+        nivelTitulo="h1"
         titulo="No pudimos cargar la página."
         apoyo="Revisa tu conexión e inténtalo de nuevo."
       >
@@ -813,6 +818,8 @@ export default function ErrorRaiz({
 ```
 
 **Verificación:** `npm run typecheck` → 0 · `npm run lint` → 0.
+
+> **Nota de ejecución (28/10/2026, revisión de calidad C5):** el bloque de arriba se completó con `nivelTitulo="h1"` en `EstadoVacio`. La raíz no tiene ningún `h1` propio (el layout sólo tiene `<main>`); `app/catalogo/error.tsx` usa `h2` porque allí `TituloCatalogo` aporta el `h1`, condición que no se cumple en `/` o `/carrito`. El patrón de pantalla completa `app/producto/[slug]/error.tsx` y `app/not-found.tsx` usan `h1`, y la regla axe `page-has-heading-one` lo exige. El JSDoc del bloque anterior también se amplió con esta razón.
 
 **→ Commit C5:** `repositorio-postgres.ts`, `index.ts`, `app/error.tsx` (¡`.env.local` NO!).
 Mensaje: `F3-A: repositorio Postgres conmutado por FUENTE_CATALOGO + error de raíz`
