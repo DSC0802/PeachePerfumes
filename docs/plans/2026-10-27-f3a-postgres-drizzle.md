@@ -835,19 +835,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
-/**
- * Configuración de Vitest — suites de Node sin DOM (decisión D8).
- *
- * - `include`: `tests/**/*.test.ts` — unit (`tests/unit/`) + espejo Postgres
- *   (`tests/integracion/`, F3-A §8). Los specs de Playwright son `.spec.ts`
- *   y quedan fuera: sólo corren bajo su runner.
- * - `test.env.FUENTE_CATALOGO=demo`: la suite unit SIEMPRE prueba el
- *   repositorio demo, aunque exista `.env.local` con `postgres`. La suite
- *   espejo importa `repositorioPostgres` directamente y no depende de esto.
- * - Alias `@/*` idéntico al de `tsconfig.json`, para que los tests consuman
- *   la app igual que la UI.
- * - Entorno `node`: los tests son puros (sin DOM).
- */
+// Configuración de Vitest — suites de Node sin DOM (decisión D8).
+//
+// (Comentario de línea, no JSDoc: el glob `tests/**/*.test.ts` contiene la
+// secuencia `*/`, que cerraría prematuramente un comentario `/** … */`.)
+//
+// - `include`: `tests/**/*.test.ts` — unit (`tests/unit/`) + espejo Postgres
+//   (`tests/integracion/`, F3-A §8). Los specs de Playwright son `.spec.ts`
+//   y quedan fuera: sólo corren bajo su runner.
+// - `test.env.FUENTE_CATALOGO=demo`: la suite unit SIEMPRE prueba el
+//   repositorio demo, aunque exista `.env.local` con `postgres`. La suite
+//   espejo importa `repositorioPostgres` directamente y no depende de esto.
+// - Alias `@/*` idéntico al de `tsconfig.json`, para que los tests consuman
+//   la app igual que la UI.
+// - Entorno `node`: los tests son puros (sin DOM).
 const raiz = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
@@ -881,8 +882,8 @@ import type { FamiliaOlfativa, OrdenCatalogo } from "@/lib/catalogo/tipos";
  * fila→dominio, la conexión y la semántica compartida (`filtro.ts`).
  *
  * Omisión visible: sin `.env.local`, o con la BD caída (>3 s), la suite se
- * salta con un aviso en la consola. Nunca se convierte un skip en verde
- * silencioso.
+ * salta con un aviso escrito directo a `stderr` (visible con cualquier
+ * reporter). Nunca se convierte un skip en verde silencioso.
  *
  * Adaptación única respecto a la suite demo: la aserción
  * «el primer elemento es el primero del archivo de datos» no
@@ -894,8 +895,14 @@ import type { FamiliaOlfativa, OrdenCatalogo } from "@/lib/catalogo/tipos";
 
 try {
   process.loadEnvFile(".env.local");
-} catch {
-  // Sin .env.local no hay DATABASE_URL: la suite se omite más abajo.
+} catch (error) {
+  // Sin .env.local (ENOENT) no hay DATABASE_URL y basta el aviso de más abajo;
+  // cualquier otro fallo (archivo malformado, Node < 20.12) se dice con su causa.
+  if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    process.stderr.write(
+      `\n⚠ .env.local ilegible: ${(error as Error).message}\n`,
+    );
+  }
 }
 
 let disponible = false;
@@ -908,14 +915,19 @@ if (process.env.DATABASE_URL) {
     await sondeo.query("SELECT 1");
     disponible = true;
   } catch (error) {
-    console.warn(
+    // stderr directo: el reporter por defecto descarta los console.* emitidos
+    // en fase de importación cuando todo el archivo queda skip (spec §8: aviso
+    // visible, nunca silencioso).
+    process.stderr.write(
       `\n⚠ Suite Postgres OMITIDA — la BD no responde: ${(error as Error).message}\n`,
     );
   } finally {
     await sondeo.end();
   }
 } else {
-  console.warn("\n⚠ Suite Postgres OMITIDA — falta DATABASE_URL en .env.local\n");
+  process.stderr.write(
+    "\n⚠ Suite Postgres OMITIDA — falta DATABASE_URL en .env.local\n",
+  );
 }
 
 const catalogo: CatalogoRepositorio = repositorioPostgres;
@@ -977,6 +989,8 @@ npx vitest run
 (Sin BD: `Tests 24 passed | 24 skipped` + los avisos ⚠ + exit 0 — también válido, pero la verificación oficial de la T13 se hace CON la BD arriba: 48/48.)
 
 **→ Commit C6:** `vitest.config.ts`, `tests/integracion/catalogo-postgres.test.ts`.
+> **Nota de ejecución (28/10/2026, revisión de calidad T11):** dos ajustes mínimos al scaffold de arriba, ya aplicados al bloque (paridad byte a byte con el archivo). (1) Los dos `console.warn` de la guardia pasan a `process.stderr.write(...)`: el reporter por defecto de vitest descarta los mensajes de consola emitidos en fase de importación cuando todo el archivo queda `skip` — reproducido: `24 passed | 24 skipped` sin ningún aviso. `stderr` directo es visible con cualquier reporter, sin añadir tests ni cambiar el comando del gate (spec §8: «aviso claro, no silencioso»). (2) El `catch` de `loadEnvFile` diferencia el `ENOENT` (sin `.env.local`: escenario esperado, basta el aviso de `DATABASE_URL` más abajo) de cualquier otro fallo (`.env.local` malformado o Node < 20.12), que se avisa con su causa real en lugar de atribuirlo siempre a «falta DATABASE_URL».
+
 Mensaje: `F3-A: suite espejo de 24 tests contra PostgreSQL`
 
 ### T12 · Documentación coherente con lo construido
