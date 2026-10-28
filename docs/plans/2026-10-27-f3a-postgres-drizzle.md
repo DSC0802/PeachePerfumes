@@ -180,8 +180,8 @@ import {
 
 /**
  * Esquema F3-A (docs/specs/2026-10-27-f3a-postgres-drizzle-design.md §3).
- * Espejo del contrato `lib/catalogo/tipos.ts`: la BD guarda lo que la UI
- * ya espera, la conversión de filas la hace `repositorio-postgres.ts`.
+ * Tras el paso a USD (T5) espeja el contrato `lib/catalogo/tipos.ts`: la BD
+ * guarda lo que la UI espera; la conversión de filas la hará `repositorio-postgres.ts`.
  */
 
 /** Familia olfativa (D-DATOS-1) — mismos valores que `FamiliaOlfativa`. */
@@ -258,6 +258,8 @@ export const productos = pgTable(
 
 1. `npm run db:generate` → crea `db/migraciones/0000_<nombre>.sql`.
 2. **Leer la migración generada** y comprobar que contiene: `CREATE TABLE "categorias"`, `CREATE TABLE "productos"`, los dos `CREATE TYPE` (`familia_olfativa`, `estado_producto`), `CREATE UNIQUE INDEX` sobre `slug`, los 3 índices y el índice parcial `WHERE oculto = false`. Si `drizzle-kit` cambió su API y falta algo, se ajusta `db/schema.ts` aquí — no se deja nada a medias.
+
+   > **Nota de ejecución (27/10/2026):** el bloque de código de T4 **no es ejecutable tal cual** con `drizzle-orm@0.45.4` / `drizzle-kit@0.31.11`; el ajuste queda autorizado por este mismo paso y se hizo en `db/schema.ts`: (a) `sql` se importa de `drizzle-orm` (no lo exporta `pg-core` → `TypeError: import_pg_core.sql is not a function`); (b) `slug` usa `uniqueIndex(...)` en el callback de tabla en vez de `.unique()` de columna, porque `.unique()` genera `CONSTRAINT ... UNIQUE` y aquí se exige `CREATE UNIQUE INDEX`. Registrado en `decisiones.md` (T12, **D-F3A-ESQUEMA**).
 3. `npm run db:migrate` → debe terminar sin error.
 4. **Verificación (guardar salida literal):**
 
@@ -293,8 +295,8 @@ Mensaje: `F3-A: esquema Drizzle y migración de catálogo (PostgreSQL local)`
      por
 
      ```ts
-     * Los precios están en USD (moneda base, decisión D5 del 27/10/2026) y son la
-     * misma escala que usa la semilla de PostgreSQL (docs/specs/...-f3a...md §4).
+     * Los precios están en USD (moneda base, decisión D5) y son la
+     * misma escala que usa la semilla de PostgreSQL (docs/specs/2026-10-27-f3a-postgres-drizzle-design.md §4).
      * La tasa CUP/USD la fija el administrador en el Dashboard (F3-C).
      ```
 
@@ -452,6 +454,8 @@ export function seleccionarRelacionados(
     .slice(0, maximo);
 }
 ```
+
+> **Notas de ejecución (27/10/2026, tras la revisión de calidad de T6):** en `filtro.ts` se afinaron comentarios heredados que eran imprecisos al pie de la letra (cabecera: añade §2.5, §8 y marca `tests/integracion` como T11; JSDoc de `aplicarFiltro`: advierte de que no aplica defaults/validación del contrato ni copia el array de entrada; comentario de familia desconocida decía «no vacía nada» justo donde sí vacía; la cita de `nombre-asc` añade spec §6; el JSDoc de `seleccionarRelacionados` documenta `[]` con slug inexistente o `limite ≤ 0`). Además **se quitó el `limite = 4` de la firma demo** (`async listarRelacionados(slug, limite)`): el defecto vive SOLO en `seleccionarRelacionados` — un default duplicado en dos capas sería exactamente la divergencia demo⇄Postgres que esta tarea elimina. Lógica intacta (24/24, typecheck 0, lint 0); el snippet de abajo conserva el `= 4` original, la fuente de verdad es el código.
 
 **Modificar `lib/catalogo/repositorio-demo.ts` (delegar, sin cambiar resultados):**
 
@@ -752,11 +756,13 @@ export const catalogo: CatalogoRepositorio =
   fuente === "postgres" ? repositorioPostgres : repositorioDemo;
 ```
 
-**Archivo nuevo `.env.local`** (gitignored desde Fase 1 — verificar con `git status --porcelain` que NO aparece):
+**Archivo nuevo `.env.local`** (gitignored desde Fase 1 — verificar con `git status --porcelain` que NO aparece).
+
+> **Nota de ejecución (orquestador):** en la práctica se crea **al terminar T1**, antes de T4: `drizzle-kit generate` carga `drizzle.config.ts`, que exige `DATABASE_URL`. La contraseña se sustituye en cuanto el cliente la facilita; `FUENTE_CATALOGO=postgres` no tiene efecto hasta que T9 lo lea.
 
 ```dotenv
 # Conexión a PostgreSQL local (spec F3-A §6). NUNCA se sube a git.
-DATABASE_URL=postgres://postgres:CONTRASENA_AQUI@localhost:5432/peache
+DATABASE_URL=postgres://postgres:<password>@localhost:5432/peache
 
 # Fuente del catálogo: postgres | demo (defecto demo si se omite).
 FUENTE_CATALOGO=postgres
@@ -988,6 +994,8 @@ Mensaje: `F3-A: suite espejo de 24 tests contra PostgreSQL`
 | **D-F3A-ESPEJO** | La suite espejo adapta UNA aserción de las 24: «primer elemento = primero del archivo de datos» → **estabilidad entre consultas** (una tabla no tiene orden de archivo garantizado). La suite demo queda intacta. Sin BD, la espejo se salta con **aviso visible** (spec §8: omitir, nunca fingir). |
 | **D-F3A-COMENTARIOS** | En `tests/unit/catalogo.test.ts` sólo se actualizaron **dos comentarios** (`1350 CUP`→`25 USD`, `4500 CUP`→`89 USD`); ninguna aserción se tocó (spec §8). |
 | **D-F3A-DOCS** | Drive-by justificado al actualizar los árboles de `arquitectura.md`: listaban `lib/dinero.ts`, que **nunca existió** (D-DINERO-1 ya lo vetó). Al añadir `db/` y `filtro.ts` a esos árboles se corrige también esa línea. |
+| **D-F3A-ESQUEMA** | `db/schema.ts` se ajustó al API real de las versiones instaladas (autorización del paso T4.2): `sql` se importa de `drizzle-orm` (no de `pg-core`) y `slug` usa `uniqueIndex()` en el callback de tabla, porque `.unique()` de columna genera `CONSTRAINT ... UNIQUE` y T4.2 exige `CREATE UNIQUE INDEX`. El bloque de código de T4 en el plan es inexecutable tal cual; la fuente de verdad es `db/schema.ts`. |
+| **D-F3A-SEC-DEPS** | `npm audit` (27/10/2026): 4 *moderate* de `esbuild ≤0.24.2` — transitivo de `drizzle-kit` (dev-only), advisory GHSA-67mh-4wv8-2f99 (servidor de desarrollo de esbuild, no utilizado aquí); `npm audit --omit=dev` → **0 vulnerabilidades**. **Aceptado**: no hay fix sin degradar `drizzle-kit` a 0.18.1; prohibido `npm audit fix --force`. `npm audit signatures` falló por red (informativo, compensado por `resolved` oficial + `integrity` sha512). |
 ```
 
 **2. `docs/arquitectura.md`** (sustituciones puntuales, localizables con los fragments dados):
