@@ -6,8 +6,7 @@
  * - En Vercel (serverless) el filesystem es solo lectura, por eso no usamos
  *   `node:fs/promises`; todo vive en PostgreSQL.
  */
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon, sql } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 
 export const TAMANO_MAXIMO_IMAGEN = 4 * 1024 * 1024; // 4 MB
 
