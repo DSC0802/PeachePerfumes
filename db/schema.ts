@@ -74,6 +74,9 @@ export const productos = pgTable(
     notasFondo: text("notas_fondo").array().notNull(),
     imagenSrc: text("imagen_src").notNull(),
     imagenAlt: text("imagen_alt").notNull(),
+    // Imagen almacenada en Neon (bytea) para servirla vía API en Vercel
+    imagenDatos: bytea("imagen_datos"),
+    imagenTipo: text("imagen_tipo"),
     // NOT NULL: `Producto.categoriaId` es obligatorio en el contrato.
     categoriaId: text("categoria_id")
       .notNull()

@@ -1,16 +1,18 @@
 /**
- * Imágenes de producto en carpeta LOCAL (F3-C, D-F3C-IMAGENES).
- * - Se guardan fuera de `public/` (Next sólo sirve lo que existía al hacer build)
- *   y las sirve `app/imagenes/[archivo]/route.ts`.
- * - El tipo se decide por los *magic bytes*, nunca por el MIME del navegador.
- * Las funciones puras (detección, nombre) se testean sin disco.
+ * Imágenes de producto almacenadas en Neon (bytea) — F3-C, D-F3C-IMAGENES.
+ * - Las imágenes se guardan como datos binarios en la columna `imagen_datos`
+ *   de la tabla `productos`, asociadas al `id` del producto.
+ * - Se sirven mediante la ruta API `app/api/imagenes/[id]/route.ts`.
+ * - En Vercel (serverless) el filesystem es solo lectura, por eso no usamos
+ *   `node:fs/promises`; todo vive en PostgreSQL.
  */
 import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
+import { productos as tablaProductos } from "../../db/schema";
 
 export const TAMANO_MAXIMO_IMAGEN = 4 * 1024 * 1024; // 4 MB
-export const PREFIJO_URL_IMAGEN = "/imagenes/";
 
 export type ExtensionImagen = "jpg" | "png" | "webp";
 
@@ -20,9 +22,9 @@ export const TIPOS_CONTENIDO: Record<ExtensionImagen, string> = {
   webp: "image/webp",
 };
 
-/** Nombre aceptado por la ruta pública: uuid v4 + extensión permitida. */
-export const PATRON_ARCHIVO_IMAGEN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp)$/;
+/** UUID válido usado como identificador de imagen (y de producto). */
+export const PATRON_ID_IMAGEN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** Devuelve la extensión real según la cabecera binaria, o null si no es imagen válida. */
 export function detectarTipoImagen(bytes: Uint8Array): ExtensionImagen | null {
@@ -36,50 +38,62 @@ export function detectarTipoImagen(bytes: Uint8Array): ExtensionImagen | null {
   return null;
 }
 
-export function nombreArchivoImagen(extension: ExtensionImagen, id: string = randomUUID()): string {
-  return `${id}.${extension}`;
-}
-
-/** `/imagenes/<archivo>` → `<archivo>` si es nuestro; null para imágenes ajenas (demo). */
+/** `/imagenes/<id>` → devuelve el id si es un UUID válido; null para URLs ajenas. */
 export function archivoDesdeUrl(src: string): string | null {
-  if (!src.startsWith(PREFIJO_URL_IMAGEN)) return null;
-  const archivo = src.slice(PREFIJO_URL_IMAGEN.length);
-  return PATRON_ARCHIVO_IMAGEN.test(archivo) ? archivo : null;
-}
-
-export function directorioImagenes(): string {
-  return path.resolve(
-    process.env.DIR_IMAGENES ?? path.join(/*turbopackIgnore: true*/ "almacen", "imagenes"),
-  );
+  if (!src.startsWith("/imagenes/")) return null;
+  const id = src.slice("/imagenes/".length);
+  return PATRON_ID_IMAGEN.test(id) ? id : null;
 }
 
 export type ResultadoImagen =
   | { ok: true; src: string }
   | { ok: false; error: string };
 
-/** Valida y guarda un `File` del formulario. Devuelve la URL pública. */
-export async function guardarImagen(archivo: File): Promise<ResultadoImagen> {
+/**
+ * Guarda la imagen en Neon (columna `imagen_datos` de `productos`) y devuelve
+ * la URL para servirla vía `/api/imagenes/<productoId>`.
+ * `productoId` es el UUID del producto al que pertenece la imagen.
+ */
+export async function guardarImagen(
+  archivo: File,
+  productoId: string
+): Promise<ResultadoImagen> {
+  if (!PATRON_ID_IMAGEN.test(productoId)) {
+    return { ok: false, error: "ID de producto inválido." };
+  }
   if (archivo.size === 0) return { ok: false, error: "El archivo está vacío." };
   if (archivo.size > TAMANO_MAXIMO_IMAGEN) {
     return { ok: false, error: "La imagen supera 4 MB. Redúcela y vuelve a intentarlo." };
   }
+
   const bytes = new Uint8Array(await archivo.arrayBuffer());
   const extension = detectarTipoImagen(bytes);
   if (!extension) {
     return { ok: false, error: "Formato no admitido. Usa JPG, PNG o WebP." };
   }
-  const nombre = nombreArchivoImagen(extension);
-  const directorio = directorioImagenes();
-  await mkdir(directorio, { recursive: true });
-  await writeFile(path.join(directorio, nombre), bytes);
-  return { ok: true, src: `${PREFIJO_URL_IMAGEN}${nombre}` };
+
+  const sql = neon(process.env.DATABASE_URL!);
+  const db = drizzle(sql);
+
+  await db
+    .update(tablaProductos)
+    .set({
+      imagenDatos: bytes,
+      imagenTipo: TIPOS_CONTENIDO[extension],
+    })
+    .where(eq(tablaProductos.id, productoId));
+
+  return { ok: true, src: `/imagenes/${productoId}` };
 }
 
-/** Borra una imagen propia (ignora las de demo y las que ya no existen). */
+/** Borra la imagen de un producto (pone imagen_datos e imagen_tipo en null). */
 export async function borrarImagen(src: string): Promise<void> {
-  const archivo = archivoDesdeUrl(src);
-  if (!archivo) return;
-  await unlink(
-    path.join(/*turbopackIgnore: true*/ directorioImagenes(), archivo),
-  ).catch(() => {});
+  const id = archivoDesdeUrl(src);
+  if (!id) return;
+  const sql = neon(process.env.DATABASE_URL!);
+  const db = drizzle(sql);
+  await db
+    .update(tablaProductos)
+    .set({ imagenDatos: null, imagenTipo: null })
+    .where(eq(tablaProductos.id, id));
 }

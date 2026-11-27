@@ -8,7 +8,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requerirAdmin } from "@/lib/auth/acceso";
-import { borrarImagen, guardarImagen } from "./imagenes";
+import { archivoDesdeUrl, borrarImagen, guardarImagen } from "./imagenes";
 import {
   actualizarProducto,
   cambiarEstado,
@@ -82,29 +82,42 @@ export async function guardarProducto(
     return { errores: { slug: "Ya hay otro producto con esa URL. Cambia el slug." }, valores };
   }
 
-  let imagenNueva: string | undefined;
-  if (hayArchivo) {
-    const subida = await guardarImagen(archivo);
-    if (!subida.ok) return { errores: { imagen: subida.error }, valores };
-    imagenNueva = subida.src;
-  } else if (quitarImagen) {
-    imagenNueva = "";
-  }
-
   let guardadoId: string;
+
   try {
     if (existente) {
-      await actualizarProducto(existente.id, datos, imagenNueva);
-      if (imagenNueva !== undefined && existente.imagenSrc !== imagenNueva) {
+      // Edición: actualizar datos primero (sin imagen todavía)
+      await actualizarProducto(existente.id, datos);
+
+      if (hayArchivo) {
+        const subida = await guardarImagen(archivo, existente.id);
+        if (!subida.ok) return { errores: { imagen: subida.error }, valores };
+        await actualizarProducto(existente.id, datos, subida.src);
+        // Borrar imagen anterior si era nuestra y es diferente
+        if (
+          existente.imagenSrc &&
+          archivoDesdeUrl(existente.imagenSrc) &&
+          existente.imagenSrc !== subida.src
+        ) {
+          await borrarImagen(existente.imagenSrc);
+        }
+      } else if (quitarImagen) {
         await borrarImagen(existente.imagenSrc);
+        await actualizarProducto(existente.id, datos, "");
       }
       guardadoId = existente.id;
     } else {
-      const creado = await crearProducto(datos, imagenNueva ?? "");
+      // Creación: crear producto primero (sin imagen)
+      const creado = await crearProducto(datos, "");
       guardadoId = creado.id;
+
+      if (hayArchivo) {
+        const subida = await guardarImagen(archivo, creado.id);
+        if (!subida.ok) return { errores: { imagen: subida.error }, valores };
+        await actualizarProducto(creado.id, datos, subida.src);
+      }
     }
   } catch (error) {
-    if (imagenNueva) await borrarImagen(imagenNueva); // no dejar huérfanos
     console.error("[admin] guardarProducto", error);
     return { error: "No se pudo guardar. Revisa la conexión con la base de datos e inténtalo de nuevo.", valores };
   }
