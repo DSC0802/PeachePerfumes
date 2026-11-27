@@ -1,4 +1,6 @@
-/* §6 de componentes.md — Pie. Apilado en móvil, 3 columnas en ≥768px. */
+/* Pie de página profesional — Peache Perfumes.
+   Reglas del sistema de diseño: filetes en vez de cajas, esquinas rectas,
+   tipografía Archivo para texto, versalitas espaciadas para rótulos. */
 
 /* Revista: el colofón, sobre el mismo papel y tras un filete de tinta. */
 .pie {
@@ -9,31 +11,69 @@
 
 .interior {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-8);
+}
+
+/* Cada bloque es una columna independiente en desktop. */
+.bloque {
+  display: grid;
+  gap: var(--space-4);
 }
 
 .marca {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
   justify-items: start;
 }
 
-.lineaDescriptiva {
+.descripcion {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-body);
   color: var(--color-text-muted);
+  max-width: 42ch;
 }
 
+/* Rótulos de bloque: versalitas espaciadas, como en el sistema de diseño. */
+.tituloBloque {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Dirección y horario */
+.direccion {
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.horario {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.etiqueta {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+/* Enlaces de navegación */
 .enlaces {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-5);
+  flex-direction: column;
+  gap: var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* Target táctil también en los enlaces del pie (regla global §1) */
 .enlaces a {
   display: inline-flex;
   align-items: center;
@@ -41,24 +81,99 @@
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-bottom: var(--rule-width) solid transparent;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.enlaces a:hover,
+.enlaces a:focus-visible {
+  color: var(--color-text);
+  border-bottom-color: var(--color-text);
+}
+
+/* Redes sociales */
+.redes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.enlaceRed {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.enlaceRed:hover,
+.enlaceRed:focus-visible {
+  color: var(--color-accent);
+}
+
+/* Si no hay URL configurada, mostrar como texto sin enlace (placeholder). */
+.enlaceRed[href="#"] {
+  color: var(--color-text-desactivated);
+  pointer-events: none;
+}
+
+/* Colofón: ancho completo, filete superior, copyright y aviso. */
+.colofon {
+  border-top: var(--rule-width) solid var(--color-rule);
+  padding-block: var(--space-5);
+  margin-top: var(--space-8);
+}
+
+.colofonInterior {
+  display: grid;
+  gap: var(--space-3);
+  align-items: start;
 }
 
 .copyright {
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text-subtle);
+  margin: 0;
 }
 
+.avisoDemo {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-body);
+  color: var(--color-text-desactivated);
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* Responsive: 4 columnas desde 768px. */
 @media (min-width: 768px) {
-  .pie {
-    padding-block: var(--space-9);
+  .interior {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+    align-items: start;
   }
 
-  .interior {
-    grid-template-columns: 1fr auto auto;
-    gap: var(--space-6);
-    align-items: start;
+  .colofonInterior {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+/* Movimiento reducido: eliminar transiciones. */
+@media (prefers-reduced-motion: reduce) {
+  .enlaces a,
+  .enlaceRed {
+    transition: none;
   }
 }
