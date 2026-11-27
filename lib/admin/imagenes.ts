@@ -40,7 +40,7 @@ export function detectarTipoImagen(bytes: Uint8Array): ExtensionImagen | null {
 
 /** `/imagenes/<id>` → devuelve el id si es un UUID válido; null para URLs ajenas. */
 export function archivoDesdeUrl(src: string): string | null {
-  if (!src.startsWith("/imagenes/")) return null;
+  if (!src.startsWith("/api/imagenes/")) return null;
   const id = src.slice("/imagenes/".length);
   return PATRON_ID_IMAGEN.test(id) ? id : null;
 }
@@ -83,7 +83,7 @@ export async function guardarImagen(
     })
     .where(eq(tablaProductos.id, productoId));
 
-  return { ok: true, src: `/imagenes/${productoId}` };
+  return { ok: true, src: `/api/imagenes/${productoId}` };
 }
 
 /** Borra la imagen de un producto (pone imagen_datos e imagen_tipo en null). */
