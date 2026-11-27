@@ -12,7 +12,7 @@ export interface CampoTextoProps
   /** `<label>` real siempre (nunca sólo placeholder). */
   etiqueta: string;
   id: string;
-  tipo?: "search" | "text" | "email" | "tel" | "number";
+  tipo?: "search" | "text" | "email" | "tel" | "number" | "password";
   /** Ayuda persistente: sigue en `aria-describedby` aunque haya error (§2). */
   ayuda?: string;
   /** Mensaje de error: `role="alert"`, junto al campo (§2, estados §4.3). */

@@ -10,7 +10,7 @@ export interface EtiquetaProps {
   className?: string;
 }
 
-export default function Etiqueta({ variante = "acento", children, className }: EtiquetaProps) {
+export default function Etiqueta({ variante = "neutral", children, className }: EtiquetaProps) {
   const clases = [styles.badge, styles[`badge--${variante}`], className].filter(Boolean).join(" ");
   return <span className={clases}>{children}</span>;
 }

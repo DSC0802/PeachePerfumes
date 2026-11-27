@@ -1,0 +1,81 @@
+/* Accesos rápidos del resumen: columnas abiertas por un filete, como el
+   «Cómo comprar» de la portada. Sin cajas; el nombre de la sección en Bodoni
+   se subraya al pasar. */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-6) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tarjeta {
+  position: relative;
+  padding-block-start: var(--space-3);
+  border-top: var(--rule-width) solid var(--color-rule);
+}
+
+.tarjeta h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-h4);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.tarjeta p {
+  margin: 0;
+  max-width: 40ch;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+.etiqueta {
+  position: absolute;
+  top: var(--space-3);
+  right: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Enlace extendido: toda la columna es clicable, el foco se ve en ella. */
+.enlace {
+  color: var(--color-text);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--duration-slow) var(--ease-out);
+}
+
+.enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta:has(.enlace:hover) .enlace {
+    background-size: 100% 1px;
+  }
+}
+
+.tarjeta:has(.enlace:focus-visible) {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+.enlace:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enlace {
+    transition: none;
+  }
+}

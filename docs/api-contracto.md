@@ -99,8 +99,8 @@ Idéntica al tipo `Producto` de `lib/catalogo/tipos.ts` (`docs/arquitectura.md` 
   "nombre": "Brisa de Coco",
   "tamano": "100 ml",
   "tamanoMl": 100,
-  "precio": 2500,
-  "moneda": "CUP",
+  "precio": 47,
+  "moneda": "USD",
   "descripcion": "Fresca, luminosa y ligera: una salida cítrica que se asienta sobre un corazón floral y un fondo cremoso de coco y sándalo.",
   "notas": {
     "salida": ["Bergamota", "Limón verde"],
@@ -233,8 +233,8 @@ Reglas: parámetros desconocidos se ignoran; `orden` o `familia` con valor no pe
       "nombre": "Brisa de Coco",
       "tamano": "100 ml",
       "tamanoMl": 100,
-      "precio": 2500,
-      "moneda": "CUP",
+      "precio": 47,
+      "moneda": "USD",
       "descripcion": "Fresca, luminosa y ligera.",
       "notas": {
         "salida": ["Bergamota", "Limón verde"],
@@ -300,10 +300,10 @@ Todas las peticiones de esta sección requieren cabecera `X-Carrito-Id` (§1.5).
       "marca": "Casa Palma",
       "nombre": "Brisa de Coco",
       "tamano": "100 ml",
-      "precio": 2500,
-      "moneda": "CUP",
+      "precio": 47,
+      "moneda": "USD",
       "cantidad": 2,
-      "subtotal": 5000,
+      "subtotal": 94,
       "imagen": {
         "src": "/productos/brisa-de-coco.webp",
         "alt": "Frasco de Brisa de Coco de 100 ml sobre fondo arena"
@@ -311,10 +311,10 @@ Todas las peticiones de esta sección requieren cabecera `X-Carrito-Id` (§1.5).
     }
   ],
   "resumen": {
-    "subtotal": 5000,
+    "subtotal": 94,
     "envio": 0,
-    "total": 5000,
-    "moneda": "CUP",
+    "total": 94,
+    "moneda": "USD",
     "cantidadTotal": 2
   },
   "actualizadoEn": "2026-10-24T15:30:00-05:00"
@@ -400,12 +400,12 @@ Crea un pedido a partir del carrito actual. Cabeceras: `X-Carrito-Id` + `Idempot
     "municipio": "Plaza de la Revolución",
     "provincia": "La Habana"
   },
-  "metodoPago": "transferencia",
+  "metodoPago": "efectivo_contra_entrega",
   "notas": "Llamar antes de entregar."
 }
 ```
 
-`metodoPago`: valor de un enum que **se decidirá en la fase de pagos**; mientras tanto el endpoint debe rechazar cualquier valor que no esté en su catálogo con `422` `metodo_pago_no_disponible`. Aquí se pone `transferencia` sólo como ejemplo de forma.
+`metodoPago`: enum cerrado. Desde el 05/11/2026 (D3) su único valor es **`efectivo_contra_entrega`**; el endpoint rechaza cualquier otro con `422` `metodo_pago_no_disponible`.
 
 **Response `201`**
 
@@ -423,7 +423,7 @@ Crea un pedido a partir del carrito actual. Cabeceras: `X-Carrito-Id` + `Idempot
     "municipio": "Plaza de la Revolución",
     "provincia": "La Habana"
   },
-  "metodoPago": "transferencia",
+  "metodoPago": "efectivo_contra_entrega",
   "lineas": [
     {
       "lineaId": "d1c2e3f4-0000-4000-8000-000000000001",
@@ -432,16 +432,16 @@ Crea un pedido a partir del carrito actual. Cabeceras: `X-Carrito-Id` + `Idempot
       "nombre": "Brisa de Coco",
       "marca": "Casa Palma",
       "tamano": "100 ml",
-      "precio": 2500,
+      "precio": 47,
       "cantidad": 2,
-      "subtotal": 5000
+      "subtotal": 94
     }
   ],
   "resumen": {
-    "subtotal": 5000,
+    "subtotal": 94,
     "envio": 0,
-    "total": 5000,
-    "moneda": "CUP"
+    "total": 94,
+    "moneda": "USD"
   },
   "notas": "Llamar antes de entregar."
 }
@@ -596,6 +596,6 @@ export const catalogo: CatalogoRepositorio = fuente;
 - [ ] Todo acceso a datos pasa por `@/lib/catalogo`.
 - [ ] El tipo usado para renderizar productos es `Producto` de `lib/catalogo/tipos.ts`, con todos los campos de §1.3.
 - [ ] `ProductoFiltro` conserva los campos `categoria`, `familia`, `busqueda`, `orden` y los valores de `orden` de §2.3.
-- [ ] El dinero se pinta **sólo** con `components/ui/Precio`, que usa `Intl.NumberFormat("es-CU", { style: "currency" })` y el texto «CUP» accesible aparte — nunca concatenando `$` + número (§10 de `docs/design/componentes.md` manda sobre `formatearPrecio()` de `docs/arquitectura.md`; ver `docs/decisiones.md` D-DINERO-1).
+- [ ] El dinero se pinta **sólo** con `components/ui/Precio`, que usa `Intl.NumberFormat("es-CU", { style: "currency" })` y el texto «USD» accesible aparte — nunca concatenando `$` + número (§10 de `docs/design/componentes.md` manda sobre `formatearPrecio()` de `docs/arquitectura.md`; ver `docs/decisiones.md` D-DINERO-1).
 - [ ] `Producto` inexistente → `notFound()`, no una página de error.
 - [ ] En la UI no aparece ninguna referencia a API, endpoints ni «próximamente»; sí el aviso de datos de demostración.

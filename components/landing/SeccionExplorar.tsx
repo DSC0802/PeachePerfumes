@@ -1,58 +1,71 @@
 import Link from "next/link";
-import type { Categoria } from "@/lib/catalogo";
-import { FAMILIAS } from "./familias";
+import type { Categoria, FamiliaOlfativa } from "@/lib/catalogo";
+import Contenedor from "@/components/ui/Contenedor";
 import styles from "./SeccionExplorar.module.css";
 
-const ID_TITULO = "explorar-titulo";
+/**
+ * Índice por familia olfativa: cada fila es un enlace al catálogo filtrado,
+ * con el recuento real de perfumes y las notas que más se repiten en esa
+ * familia (calculadas del catálogo, no escritas a mano).
+ */
+export interface FilaFamilia {
+  slug: FamiliaOlfativa;
+  nombre: string;
+  total: number;
+  notas: string[];
+}
 
 export interface SeccionExplorarProps {
-  /** Categorías desde `catalogo.listarCategorias()`. */
+  familias: FilaFamilia[];
   categorias: Categoria[];
 }
 
-/**
- * Navegación de la portada hacia el catálogo: familias olfativas
- * (`/catalogo?familia=…`, estado de chips §2.1) y categorías
- * (`/catalogo?categoria=…`). Aquí son **enlaces** de navegación —no bots de
- * filtro: no hay estado que pulsar, sólo hacia dónde se va.
- */
-export default function SeccionExplorar({ categorias }: SeccionExplorarProps) {
+export default function SeccionExplorar({ familias, categorias }: SeccionExplorarProps) {
+  const conPerfumes = familias.filter((f) => f.total > 0);
   return (
-    <nav className={styles.seccion} aria-labelledby={ID_TITULO}>
-      <h2 id={ID_TITULO} className={styles.titulo}>
-        Explora el catálogo
-      </h2>
-      <p className={styles.entradilla}>
-        Cada familia agrupa perfumes por el carácter que dejan en la piel.
-      </p>
+    <section className={styles.seccion} aria-labelledby="explorar-titulo">
+      <Contenedor ancho="ancho">
+        <div className={styles.cabecera}>
+          <h2 id="explorar-titulo" className={styles.titulo}>
+            Índice por familias
+          </h2>
+          <p className={styles.apoyo}>
+            Cada familia agrupa perfumes por el carácter que dejan en la piel. Las notas son las que
+            más se repiten en nuestro catálogo.
+          </p>
+        </div>
 
-      <div className={styles.grupo}>
-        <h3 className={styles.subtitulo}>Familias olfativas</h3>
-        <ul className={styles.lista}>
-          {FAMILIAS.map(({ slug, nombre }) => (
-            <li key={slug}>
-              <Link href={`/catalogo?familia=${slug}`} className={styles.chip}>
-                {nombre}
+        <ul className={styles.indice}>
+          {conPerfumes.map((familia, i) => (
+            <li key={familia.slug}>
+              <Link href={`/catalogo?familia=${familia.slug}`} className={styles.fila}>
+                <span className={`${styles.orden} cifras`} aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className={styles.nombre}>{familia.nombre}</span>
+                <span className={styles.notas}>{familia.notas.join(", ")}</span>
+                <span className={`${styles.total} cifras`}>
+                  {familia.total} {familia.total === 1 ? "perfume" : "perfumes"}
+                </span>
+                <svg className={styles.flecha} viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+                  <path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </Link>
             </li>
           ))}
         </ul>
-      </div>
 
-      {categorias.length > 0 ? (
-        <div className={styles.grupo}>
-          <h3 className={styles.subtitulo}>Categorías</h3>
-          <ul className={styles.lista}>
+        {categorias.length > 0 ? (
+          <nav className={styles.categorias} aria-label="Perfumes por categoría">
+            <span className={styles.categoriasRotulo}>También por categoría:</span>
             {categorias.map((categoria) => (
-              <li key={categoria.id}>
-                <Link href={`/catalogo?categoria=${categoria.slug}`} className={styles.chip}>
-                  {categoria.nombre}
-                </Link>
-              </li>
+              <Link key={categoria.id} href={`/catalogo?categoria=${categoria.slug}`} className={styles.categoria}>
+                {categoria.nombre}
+              </Link>
             ))}
-          </ul>
-        </div>
-      ) : null}
-    </nav>
+          </nav>
+        ) : null}
+      </Contenedor>
+    </section>
   );
 }

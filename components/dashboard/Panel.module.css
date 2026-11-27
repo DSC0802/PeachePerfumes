@@ -1,0 +1,249 @@
+/* Estilos compartidos del panel admin. Excepción documentada a la regla 1:1
+   (igual que FormularioAuth.module.css): secciones y tablas tienen la misma
+   anatomía en todas las vistas. Revista sobria: sin cajas ni sombras; cada
+   sección la abre un filete de tinta y la titula Bodoni. */
+
+.encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-block-end: var(--space-7);
+  padding-block-end: var(--space-4);
+  border-bottom: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 1.6rem + 2.2vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.subtitulo {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+}
+
+.rejilla {
+  display: grid;
+  gap: var(--space-7) var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .rejilla--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.seccion + .seccion,
+.rejilla + .seccion,
+.seccion + .rejilla,
+.rejilla + .rejilla {
+  margin-block-start: var(--space-8);
+}
+
+.tarjeta {
+  min-width: 0;
+  padding-block-start: var(--space-3);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+}
+
+/* Justo bajo el titular ya hay filete: la primera sección no repite el suyo. */
+.encabezado + .tarjeta {
+  padding-block-start: 0;
+  border-top: 0;
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-block-end: var(--space-4);
+}
+
+.tarjeta__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-h4);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.tarjeta__nota {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- Tablas: filas entre filetes finos, cabecera en versalitas ---- */
+.tablaContenedor {
+  /* relative: contiene el texto .solo-lectura (absolute) dentro del scroll. */
+  position: relative;
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.tabla caption {
+  text-align: start;
+}
+
+.tabla th,
+.tabla td {
+  padding: var(--space-3);
+  border-bottom: var(--rule-width) solid var(--color-border);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.tabla th:first-child,
+.tabla td:first-child {
+  padding-inline-start: 0;
+}
+
+.tabla th:last-child,
+.tabla td:last-child {
+  padding-inline-end: 0;
+}
+
+.tabla thead th {
+  padding-block: var(--space-2);
+  border-bottom-color: var(--color-rule);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.tabla tbody tr:last-child td,
+.tabla tbody tr:last-child th {
+  border-bottom: 0;
+}
+
+.tabla tbody tr:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.num {
+  text-align: end !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Precio dentro de una celda: sin márgenes de párrafo. */
+.tabla p {
+  margin: 0;
+}
+
+.secundario {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.vacio {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* Lista de avisos (notificaciones): texto · importe · acción, en columnas fijas. */
+.avisos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.avisoFila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-1) var(--space-5);
+  padding-block: var(--space-3);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.avisoFila > :nth-child(2) {
+  text-align: end;
+}
+
+@media (min-width: 640px) {
+  .avisoFila {
+    grid-template-columns: minmax(0, 1fr) 8rem 12rem;
+  }
+}
+
+.avisoFila form {
+  display: contents;
+}
+
+.avisoFila button {
+  justify-self: end;
+}
+
+/* ---- Avisos ---- */
+.aviso,
+.exito {
+  margin-block-end: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: var(--rule-width) solid;
+  font-size: var(--font-size-sm);
+}
+
+.aviso {
+  border-color: var(--color-warning);
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.exito {
+  border-color: var(--color-success);
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+/* ---- Barras: trazo de tinta sobre un filete gris, sin redondeos ---- */
+.barra {
+  display: block;
+  height: 4px;
+  background-color: var(--color-border);
+  overflow: hidden;
+}
+
+.barra__relleno {
+  display: block;
+  height: 100%;
+  background-color: var(--color-text);
+}
+
+/* Ficha de pedido: «Saltar a [estado] [Cambiar estado]» (D-F3D-SALTOS). */
+.salto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.salto select {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: var(--rule-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}

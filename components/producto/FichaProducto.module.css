@@ -1,21 +1,14 @@
-/* estados-y-responsividad §3.2 — anatomía de /producto/[slug]:
-   migas → galería 1/1 → h1 + badge → meta → precio + CTA → descripción →
-   pirámide. Mobile-first apilado; ≥1024px dos columnas con galería sticky. */
+/* Ficha de producto como página de revista: migas → foto (sticky ≥1024px) →
+   marca, titular y entradilla → datos → precio y compra → notas. Apilado en
+   móvil, dos columnas desde 1024px. */
 
 .ficha {
   display: grid;
   gap: var(--space-5);
-  padding-block: var(--space-6);
+  padding-block: var(--space-5) var(--space-8);
 }
 
-/* 640–1023 px: apilado con más aire (§3.2 «Responsive») */
-@media (min-width: 640px) {
-  .ficha {
-    gap: var(--space-6);
-  }
-}
-
-/* ---- §3.2.1 — migas: Inicio / Catálogo / {nombre} ---- */
+/* ---- Migas: Inicio / Catálogo / {nombre} ---- */
 
 .migas {
   display: flex;
@@ -25,8 +18,11 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-label);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
@@ -37,23 +33,17 @@
   color: var(--color-text-subtle);
 }
 
-/* ---- §3.2 «Responsive»: 2 columnas ≥1024px, galería sticky ---- */
+/* ---- Dos columnas ≥1024px, foto sticky ---- */
 
 .cuerpo {
   display: grid;
-  gap: var(--space-5);
-}
-
-@media (min-width: 640px) {
-  .cuerpo {
-    gap: var(--space-6);
-  }
+  gap: var(--space-6);
 }
 
 @media (min-width: 1024px) {
   .cuerpo {
-    grid-template-columns: 1.1fr 0.9fr;
-    column-gap: var(--space-6);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: var(--space-10);
     /* Sin estirar: el sticky necesita que el item no ocupe toda la fila */
     align-items: start;
   }
@@ -64,99 +54,170 @@
   }
 }
 
-/* ---- Columna derecha: compra + descripción (§3.2 «Responsive») ---- */
+/* Foto a sangre en móvil; 4/5 como en el resto de la revista. */
+.foto {
+  aspect-ratio: 4 / 5;
+}
+
+@media (max-width: 1023px) {
+  .galeria {
+    margin-inline: calc(-1 * var(--container-padding));
+  }
+}
+
+/* ---- Columna de texto ---- */
 
 .detalle {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
   align-content: start;
-}
-
-@media (min-width: 640px) {
-  .detalle {
-    gap: var(--space-6);
-  }
 }
 
 .encabezado {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  justify-items: start;
 }
 
-/* Marca sobre el `h1` (bloque de datos §3.2: marca + nombre) */
 .marca {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
-  color: var(--color-text-muted);
+  text-transform: uppercase;
 }
 
-.tituloFila {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2) var(--space-3);
-}
-
+/* El perfume es el titular mayor de su página. */
 .titulo {
-  font-size: var(--font-size-h1);
+  font-size: var(--font-size-display);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
-/* §3.2.4 — meta: `--font-size-sm` + `--color-text-muted` */
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-label);
+.titulo:focus {
+  outline: none;
+}
+
+.entradilla {
+  max-width: 44ch;
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-relaxed);
   color: var(--color-text-muted);
 }
 
-/* ---- §3.2.5 — precio + CTA (§16) + ayuda ---- */
+/* ---- Datos clave: tres celdas entre filetes ---- */
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  margin: 0;
+  border-top: var(--rule-width) solid var(--color-rule);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.dato {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+}
+
+.dato:first-child {
+  padding-inline-start: 0;
+}
+
+.dato + .dato {
+  border-inline-start: var(--rule-width) solid var(--color-border);
+}
+
+.dato dt {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.dato dd {
+  margin: 0;
+}
+
+/* ---- Precio y compra ---- */
 
 .compra {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+/* La única cifra grande de la página. */
+.precio {
+  margin: 0;
+  font-size: clamp(2.25rem, 1.7rem + 2vw, 3.25rem);
+}
+
+.pago {
+  max-width: 40ch;
+  color: var(--color-text-muted);
 }
 
 .cta {
   display: grid;
   gap: var(--space-2);
   justify-items: start;
+  width: 100%;
+  padding-top: var(--space-2);
 }
 
-/* Texto de apoyo del CTA: mismos tokens que `campo__ayuda`
-   (§16 lo referencia como `<p class="campo__ayuda">`) */
+/* CTA a todo el ancho en móvil (objetivo táctil grande); ajustado desde 640px. */
+.ctaBoton {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .ctaBoton {
+    width: auto;
+    min-width: 16rem;
+  }
+}
+
+/* Etiquetas superpuestas en la misma celda de rejilla. */
+.ctaEtiquetas {
+  display: inline-grid;
+  justify-items: center;
+}
+
+.ctaEtiqueta {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition:
+    opacity 200ms ease,
+    transform 200ms var(--ease-out);
+}
+
+.ctaEtiqueta[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctaEtiqueta {
+    transition: opacity 150ms ease;
+  }
+
+  .ctaEtiqueta[data-visible="false"] {
+    transform: none;
+  }
+}
+
+/* Reserva su línea para que el aviso no empuje lo de debajo. */
 .ctaAyuda {
+  min-height: 1.5em;
+  max-width: 40ch;
+  margin: 0;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-label);
   color: var(--color-text-muted);
-  max-width: 40ch;
-  margin: 0;
-}
-
-/* Confirmación temporal tras añadir al carrito (estado temporal, §3.2.5). */
-.ctaConfirmacion {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-label);
-  color: var(--color-success);
-  margin: 0;
-}
-
-/* ---- §3.2.6 — descripción: `--container-narrow` + `--line-height-relaxed` ---- */
-
-.descripcion {
-  display: grid;
-  gap: var(--space-3);
-  max-width: var(--container-narrow);
-}
-
-.subtitulo {
-  font-size: var(--font-size-h3);
-}
-
-.texto {
-  line-height: var(--line-height-relaxed);
 }

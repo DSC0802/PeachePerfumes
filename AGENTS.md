@@ -20,8 +20,11 @@ Decisiones comerciales definidas por el usuario; no re-litigarlas ni preguntar d
 - Antes de declarar completado un trabajo: skill `verifying-before-completion` (evidencia antes que afirmaciones).
 
 ## Stack técnico
-- Por definir con el usuario en el siguiente paso (landing, catálogo, carrito, checkout).
-- Al elegir stack, documentarlo aquí.
+
+- **Frontend:** Next.js 16 (App Router, Server Components) + React 19 + TypeScript.
+- **Datos:** PostgreSQL 18 (instalado el 27/10/2026 en T1) + Drizzle ORM. Esquema/migraciones en `db/`, semilla `npm run db:seed`. Fuente conmutable `FUENTE_CATALOGO=demo|postgres` (defecto `demo`) — spec `docs/specs/2026-10-27-f3a-postgres-drizzle-design.md`.
+- **Tests:** Vitest (unit + espejo de BD) y Playwright + axe-core (E2E/accesibilidad): 5 suites.
+- **Moneda base:** USD (decisión D5); conversión a CUP → F3-C.
 
 ## Estructura del proyecto
 ```

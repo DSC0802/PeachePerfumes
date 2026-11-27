@@ -1,37 +1,34 @@
 /* §4 de componentes.md — Etiqueta / Badge. Sólo `default` (no interactivo). */
 
+/* Revista: rótulo impreso con filete fino, sin relleno de color. */
 .badge {
   display: inline-block;
-  padding: var(--space-1) var(--space-2);
+  padding: 2px var(--space-2);
+  border: var(--border-width) solid currentColor;
   border-radius: var(--radius);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-label);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
 }
 
+/* «Nuevo»: uno de los dos únicos sitios donde aparece el rosa. */
 .badge--acento {
-  background-color: var(--color-accent-subtle);
   color: var(--color-accent);
 }
 
 .badge--neutral {
-  background-color: var(--color-surface-alt);
   color: var(--color-text-muted);
 }
 
-.badge--success {
-  background-color: var(--color-success-bg);
-  color: var(--color-success);
-}
-
-.badge--error {
-  background-color: var(--color-error-bg);
-  color: var(--color-error);
-}
-
+/* Estados (en tienda, disponible): tinta, como cualquier rótulo impreso. */
+.badge--success,
 .badge--info {
-  background-color: var(--color-info-bg);
-  color: var(--color-info);
+  color: var(--color-text);
+}
+
+/* Agotado / sin stock: el único estado que se tiñe, y sólo el texto y el filete. */
+.badge--error {
+  color: var(--color-error);
 }

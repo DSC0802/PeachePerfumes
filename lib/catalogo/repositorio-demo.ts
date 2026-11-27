@@ -1,16 +1,19 @@
 import type { CatalogoRepositorio } from "./repositorio";
 import type { Categoria, Producto } from "./tipos";
 import { categorias as categoriasDemo } from "../../data/categorias";
-import { productos as productosDemo } from "../../data/productos";
+import { productos as datosDemo } from "../../data/productos";
 import { aplicarFiltro, seleccionarRelacionados } from "./filtro";
 
-// ÚNICA puerta hacia data/ (docs/arquitectura.md §6.4, regla 2).
+// Puerta de la app hacia data/ (junto con db/seed.ts, script de desarrollo; la UI nunca importa data/).
 // Nada fuera de este archivo puede importar `@/data/*` (bloqueado por ESLint).
 
 /**
  * Devuelve una copia profunda del producto: la UI nunca recibe referencias
  * mutables a los datos de demostración.
  */
+// Demo (F3-C2): sin stock en data/, todo producto demo está disponible.
+const productosDemo: Producto[] = datosDemo.map((producto) => ({ ...producto, disponible: true }));
+
 function clonarProducto(producto: Producto): Producto {
   return {
     ...producto,

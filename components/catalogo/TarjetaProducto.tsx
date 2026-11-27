@@ -5,20 +5,20 @@ import Precio from "@/components/ui/Precio";
 import styles from "./TarjetaProducto.module.css";
 
 /**
- * §7 de docs/design/componentes.md — Tarjeta de producto.
- * El enlace envuelve la tarjeta completa (un solo foco por tarjeta);
- * `alt` va vacío dentro de la tarjeta: el nombre visible da el contexto.
+ * Tarjeta de producto (mundo «revista»): la foto y, debajo, como un pie de
+ * foto, la marca, el nombre como titular, el meta y el precio en cifras
+ * tabulares. Toda la tarjeta es un único enlace a la ficha.
  */
 export interface DatosTarjeta {
   slug: string;
   nombre: string;
-  /** Meta en 1 línea, p. ej. "Floral · 100 ml". */
+  /** Procedencia: la marca, cosida al talón. */
+  marca?: string;
   meta?: string;
   precio?: number;
   moneda?: string;
   novedad?: boolean;
   agotado?: boolean;
-  /** Sin `imagen` se muestra el placeholder neutral (§14). */
   imagen?: { src: string };
 }
 
@@ -33,13 +33,20 @@ export default function TarjetaProducto({ producto, className }: TarjetaProducto
   return (
     <article className={clases}>
       <Link href={`/producto/${producto.slug}`} className={styles.enlace}>
-        <MarcoImagen
-          variante="tarjeta"
-          imagen={producto.imagen ? { src: producto.imagen.src } : undefined}
-        />
+        <div className={styles.media}>
+          <MarcoImagen
+            variante="tarjeta"
+            imagen={producto.imagen ? { src: producto.imagen.src } : undefined}
+          />
+          {producto.novedad || producto.agotado ? (
+            <div className={styles.etiquetas}>
+              {producto.novedad ? <Etiqueta variante="acento">Nuevo</Etiqueta> : null}
+              {producto.agotado ? <Etiqueta variante="error">Agotado</Etiqueta> : null}
+            </div>
+          ) : null}
+        </div>
         <div className={styles.cuerpo}>
-          {producto.novedad ? <Etiqueta variante="acento">Nuevo</Etiqueta> : null}
-          {producto.agotado ? <Etiqueta variante="error">Agotado</Etiqueta> : null}
+          {producto.marca ? <p className={styles.marca}>{producto.marca}</p> : null}
           <h3 className={styles.nombre}>{producto.nombre}</h3>
           {producto.meta ? <p className={styles.meta}>{producto.meta}</p> : null}
           {typeof producto.precio === "number" ? (

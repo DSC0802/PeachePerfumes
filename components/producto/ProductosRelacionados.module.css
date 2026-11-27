@@ -1,12 +1,13 @@
-/* §3.2 — sección de relacionados bajo la ficha, a ancho completo.
-   La rejilla es la de §8 (2 → 3 → 4 columnas por breakpoint). */
+/* Relacionados bajo la ficha, a ancho completo y tras un filete grueso.
+   La rejilla es la del catálogo (2 → 3 → 4 columnas). */
 
 .relacionados {
   display: grid;
-  gap: var(--space-5);
-  padding-block-end: var(--space-5);
+  gap: var(--space-6);
+  padding-block: var(--space-9) var(--space-6);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
 }
 
 .titulo {
-  font-size: var(--font-size-h3);
+  font-size: var(--font-size-h1);
 }

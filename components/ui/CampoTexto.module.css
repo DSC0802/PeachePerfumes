@@ -40,7 +40,7 @@
 
 /* El anillo estándar de foco lo añade globals.css; aquí sólo cambia el borde */
 .control:focus-visible {
-  border-color: var(--color-focus);
+  border-color: var(--color-text);
 }
 
 .control--error,

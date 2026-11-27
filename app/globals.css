@@ -1,7 +1,7 @@
 /**
  * Peache Perfumes — tokens del sistema de diseño (Fase 1)
  * ------------------------------------------------------
- * Fuente única de verdad para la Fase 2. Todo valor de color, tipografía,
+ * Tokens del sistema (ver DESIGN.md). Todo valor de color, tipografía,
  * espaciado, layout, radio, sombra, movimiento y capa vive aquí.
  *
  * Reglas de este archivo:
@@ -25,23 +25,30 @@
      ============================================================ */
 
   /* Superficies */
-  --color-bg: #faf8f6;
+  /* Mundo «la revista de perfumes» (2026-11-07): papel couché blanco, una
+     sola tinta negra, gris de pie de foto y el rosa de marca sólo en la
+     acción principal y en «nuevo». */
+  --color-bg: #ffffff;
   --color-surface: #ffffff;
-  --color-surface-alt: #f1ede9;
-  --color-bg-disabled: #ece7e1;
-  --color-overlay: rgba(27, 23, 20, 0.55);
+  --color-surface-alt: #f3f3f2;
+  /* Fondo de estudio detrás de las fotos de producto */
+  --color-photo: #ededeb;
+  --color-bg-disabled: #eeeeed;
+  --color-overlay: rgba(20, 20, 20, 0.55);
 
-  /* Texto */
-  --color-text: #1b1714;
-  --color-text-muted: #5c554e;
-  --color-text-subtle: #6e675f;
-  --color-text-placeholder: #6e675f;
-  --color-text-disabled: #8b837b;
+  /* Texto: una sola tinta */
+  --color-text: #141414;
+  --color-text-muted: #4f4f4f;
+  --color-text-subtle: #6b6b6b;
+  --color-text-placeholder: #6b6b6b;
+  --color-text-disabled: #9a9a98;
 
-  /* Bordes */
-  --color-border: #e7e2dc;
-  --color-border-strong: #867d74;
-  --color-border-disabled: #d3ccc5;
+  /* Bordes y filetes */
+  --color-border: #e2e2e0;
+  --color-border-strong: #767676;
+  --color-border-disabled: #d6d6d4;
+  /* Filete de revista: la línea negra que separa cabecera, portada y secciones */
+  --color-rule: #141414;
 
   /* Acento (derivado del rosa de marca, oscurecido hasta AA) */
   --color-accent: #b0485c;
@@ -62,18 +69,23 @@
   --color-info-bg: #e7f0f7;
 
   /* Carga y marca provisional */
-  --color-skeleton: #ede8e2;
+  --color-skeleton: #e8e8e6;
   --color-brand-provisional: #c9788a;
 
   /* ============================================================
-     TIPOGRAFÍA — familias del sistema (cero descargas)
+     TIPOGRAFÍA — Bodoni Moda y Archivo autoalojadas (OFL, app/fonts)
      ============================================================ */
 
-  --font-serif: Georgia, "Iowan Old Style", "Times New Roman", "Noto Serif", serif;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
-  /* Wordmark provisional: se sustituye cuando el cliente entregue logo final */
-  --font-brand-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  /* Bodoni Moda: serif de revista de moda, ajusta su contraste al tamaño
+     (eje opsz). Titulares, nombres de perfume y la cabecera PEACHE.
+     Archivo a ancho normal: texto, navegación, etiquetas y cifras.
+     Las variables las inyecta next/font en <html>. */
+  --font-serif: var(--fuente-bodoni), "Bodoni 72", Didot, Georgia, serif;
+  --font-sans: var(--fuente-archivo), system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-serif);
+  /* Wordmark provisional compuesto en HTML con la serif de alto contraste */
+  --font-brand-serif: var(--font-serif);
 
   /* Escala: razón 1.25 (16 → 20 → 25 → 31.25 → 39.06 → 48.83 → 61.04) */
   --font-size-xs: 0.75rem;
@@ -84,8 +96,10 @@
   --font-size-h3: clamp(1.5625rem, 1.4rem + 0.8vw, 1.9531rem);
   --font-size-h2: clamp(1.9531rem, 1.7rem + 1.2vw, 2.4414rem);
   --font-size-h1: clamp(2.4414rem, 2rem + 1.8vw, 3.0518rem);
-  --font-size-display: clamp(3.0518rem, 2.4rem + 3vw, 3.8147rem);
+  --font-size-display: clamp(3rem, 1.9rem + 4.4vw, 6rem);
   --font-size-price: clamp(1.5625rem, 1.45rem + 0.7vw, 1.9531rem);
+  /* Cabecera PEACHE: ocupa el ancho de la página como una cabecera de revista */
+  --font-size-masthead: clamp(4.5rem, 1rem + 15vw, 13rem);
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -100,7 +114,8 @@
 
   --letter-spacing-tight: -0.01em;
   --letter-spacing-normal: 0;
-  --letter-spacing-wide: 0.06em;
+  /* Versalitas espaciadas de revista: navegación, pies de foto, etiquetas */
+  --letter-spacing-wide: 0.12em;
   --letter-spacing-brand: 0.3em;
 
   /* ============================================================
@@ -135,17 +150,19 @@
   --touch-target: 44px;
 
   /* ============================================================
-     FORMA — un único radio en todo el sistema
+     FORMA — papel impreso: esquinas rectas, filetes en vez de sombras
      ============================================================ */
 
-  --radius: 4px;
+  --radius: 0;
   --border-width: 1px;
+  --rule-width: 1px;
+  --rule-width-strong: 2px;
   --focus-width: 2px;
-  --focus-offset: 2px;
+  --focus-offset: 3px;
 
-  /* Dos sombras, máximo */
-  --shadow-1: 0 1px 2px rgb(27 23 20 / 0.06), 0 1px 1px rgb(27 23 20 / 0.04);
-  --shadow-2: 0 8px 24px rgb(27 23 20 / 0.1);
+  /* Dos sombras: sólo para capas que flotan (menús, hojas modales) */
+  --shadow-1: 0 1px 2px rgb(20 20 20 / 0.06);
+  --shadow-2: 0 12px 32px rgb(20 20 20 / 0.14);
 
   /* ============================================================
      MOVIMIENTO — tres duraciones, dos easings
@@ -154,6 +171,8 @@
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  /* Pasar de página: el único movimiento con protagonismo */
+  --duration-page: 700ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -178,24 +197,26 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Superficies (orden de luminosidad creciente: la elevación se lee sin sombra) */
-  --color-bg: #16130f;
-  --color-surface: #1e1a17;
-  --color-surface-alt: #262119;
-  --color-bg-disabled: #242019;
-  --color-overlay: rgba(0, 0, 0, 0.65);
+  /* Edición de noche: la misma revista impresa en papel negro */
+  --color-bg: #0e0e0e;
+  --color-surface: #141414;
+  --color-surface-alt: #1c1c1c;
+  --color-photo: #1f1f1e;
+  --color-bg-disabled: #1a1a1a;
+  --color-overlay: rgba(0, 0, 0, 0.7);
 
   /* Texto */
-  --color-text: #f2eee8;
-  --color-text-muted: #aba299;
-  --color-text-subtle: #948b83;
-  --color-text-placeholder: #948b83;
-  --color-text-disabled: #746c65;
+  --color-text: #f2f2f0;
+  --color-text-muted: #bdbdba;
+  --color-text-subtle: #a3a3a0;
+  --color-text-placeholder: #a3a3a0;
+  --color-text-disabled: #6e6e6c;
 
-  /* Bordes */
-  --color-border: #332e29;
-  --color-border-strong: #7a7169;
-  --color-border-disabled: #332e29;
+  /* Bordes y filetes */
+  --color-border: #2c2c2b;
+  --color-border-strong: #8a8a87;
+  --color-border-disabled: #2c2c2b;
+  --color-rule: #f2f2f0;
 
   /* Acento aclarado para mantener AA sobre fondos oscuros;
      on-accent se invierte a oscuro */
@@ -217,7 +238,7 @@
   --color-info-bg: #17222b;
 
   /* Carga y marca provisional */
-  --color-skeleton: #2a251f;
+  --color-skeleton: #222221;
   --color-brand-provisional: #d98c99;
 
   /* Sombras: aquí solo sostienen; la separación real la dan las superficies */
@@ -268,10 +289,10 @@
 
 
 /* ===============================================================
-   Peache Perfumes — base de elementos (Fase 1)
-   Copia operativa: los tokens de arriba proceden literalmente de
-   docs/design/tokens.css (fuente única de verdad). Si cambia ese
-   archivo, se vuelca aquí — no se edita el bloque de tokens a mano.
+   Peache Perfumes — base de elementos
+   Desde el 07/11/2026 (mundo «revista de perfumes») la fuente de verdad del
+   sistema es DESIGN.md junto con los tokens de este archivo;
+   docs/design/tokens.css describe el sistema anterior.
    =============================================================== */
 
 *,
@@ -290,6 +311,9 @@ html {
 
 body {
   min-height: 100svh;
+  /* Pie siempre al fondo en páginas cortas: main ocupa el espacio libre. */
+  display: flex;
+  flex-direction: column;
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -297,6 +321,10 @@ body {
   line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body > main {
+  flex: 1 0 auto;
 }
 
 img,
@@ -326,14 +354,52 @@ h6 {
   overflow-wrap: break-word;
 }
 
+/* Titulares de revista: Bodoni, contraste ajustado al tamaño (opsz). */
 h1,
 h2,
-h3,
+h3 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* El cuarto nivel es de interfaz: sans, como un rótulo de sección. */
 h4 {
-  font-family: var(--font-serif);
-  font-weight: var(--font-weight-regular);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-tight);
+  text-wrap: balance;
+}
+
+/* Cifras: precios, stock y totales en tabulares de la sans. */
+data,
+.cifras {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Versalitas espaciadas: navegación, pies de foto y rótulos de revista. */
+.versalitas {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* Superficies del navegador también llevan el mundo. */
+html {
+  accent-color: var(--color-accent);
+  caret-color: var(--color-accent);
+  scrollbar-color: var(--color-border-strong) var(--color-bg);
+}
+
+a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 
 a {
@@ -347,8 +413,8 @@ a {
 }
 
 ::selection {
-  background-color: var(--color-accent-subtle);
-  color: var(--color-text);
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 /* Enlace de salto: primer foco de la página (arquitectura §8) */

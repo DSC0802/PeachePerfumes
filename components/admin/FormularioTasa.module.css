@@ -1,0 +1,21 @@
+.formulario {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+/* Botón alineado con el control (no con la ayuda). */
+.fila > :last-child {
+  margin-top: calc(var(--font-size-sm) * var(--line-height-label) + var(--space-1));
+}
+
+.campo {
+  max-width: 14rem;
+  font-variant-numeric: tabular-nums;
+}

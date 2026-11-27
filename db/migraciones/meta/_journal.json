@@ -8,6 +8,34 @@
       "when": 1793108737377,
       "tag": "0000_amazing_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793254269332,
+      "tag": "0001_minor_swarm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793857591145,
+      "tag": "0002_vengeful_winter_soldier",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793884813081,
+      "tag": "0003_broken_thing",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793886467724,
+      "tag": "0004_friendly_silvermane",
+      "breakpoints": true
     }
   ]
 }

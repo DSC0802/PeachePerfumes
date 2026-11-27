@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function PaginaCarrito() {
   return (
-    <Contenedor>
+    <Contenedor seccion>
       <h1>Tu carrito</h1>
       <Carrito />
     </Contenedor>

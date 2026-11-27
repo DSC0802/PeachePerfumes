@@ -1,10 +1,11 @@
-import { and, eq, not } from "drizzle-orm";
+import { and, eq, ne, not } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import {
   categorias as tablaCategorias,
   productos as tablaProductos,
 } from "../../db/schema";
+import { estaDisponible } from "./disponibilidad";
 import { aplicarFiltro, seleccionarRelacionados } from "./filtro";
 import type { CatalogoRepositorio } from "./repositorio";
 import type { Categoria, Producto, ProductoFiltro } from "./tipos";
@@ -50,6 +51,8 @@ function aProducto(fila: FilaProducto): Producto {
     familia: fila.familia,
     destacado: fila.destacado,
     novedad: fila.novedad,
+    // F3-C2 (decisión del cliente): agotado si el admin lo marca o si no hay stock.
+    disponible: estaDisponible(fila),
   };
 }
 
@@ -62,14 +65,20 @@ function aCategoria(fila: FilaCategoria): Categoria {
   };
 }
 
-/** Todo lo visible: `oculto = false` es la HU-23 (ocultar, sin borrar). */
+/**
+ * Lo que la tienda puede ver (F3-C2, HU-26/27): no oculto (HU-23) y no
+ * descontinuado. Los agotados SÍ se ven, con `disponible: false`.
+ */
+const condicionVisible = and(not(tablaProductos.oculto), ne(tablaProductos.estado, "descontinuado"));
+
+/** Todo lo visible en la tienda. */
 async function cargarVisibles(): Promise<{
   productos: Producto[];
   categorias: Categoria[];
 }> {
   const db = obtenerBase();
   const [filasProductos, filasCategorias] = await Promise.all([
-    db.select().from(tablaProductos).where(not(tablaProductos.oculto)),
+    db.select().from(tablaProductos).where(condicionVisible),
     db.select().from(tablaCategorias),
   ]);
   return {
@@ -95,7 +104,7 @@ export const repositorioPostgres: CatalogoRepositorio = {
     const [fila] = await db
       .select()
       .from(tablaProductos)
-      .where(and(eq(tablaProductos.slug, slug), not(tablaProductos.oculto)))
+      .where(and(eq(tablaProductos.slug, slug), condicionVisible))
       .limit(1);
     return fila === undefined ? null : aProducto(fila);
   },

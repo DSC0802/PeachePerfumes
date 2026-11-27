@@ -1,32 +1,47 @@
-/* Carrito de compras (demo). Sólo tokens de diseño; cero hex sueltos. */
+/* Carrito (página y cajón). Revista: filas entre filetes, sin cajas; el
+   total cierra tras un filete de tinta. */
 
+/* Sin filete arriba: ya lo da el titular de la página o la cabecera del cajón. */
 .lista {
   display: grid;
-  gap: var(--space-4);
+  /* El carrito vive en la página y en el cajón lateral: decide por su ancho. */
+  container-type: inline-size;
 }
 
+/* Estrecho (móvil y cajón): foto a la izquierda; a la derecha, nombre y
+   subtotal arriba, precio por unidad si hay varias, y cantidad + «Quitar». */
 .item {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius);
-  background-color: var(--color-surface);
-  align-items: start;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "imagen datos subtotal"
+    "imagen unidad unidad"
+    "imagen cantidad quitar";
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-width) solid var(--color-border);
+  align-items: center;
+}
+
+.item > :nth-child(1) { grid-area: imagen; align-self: start; }
+.item > :nth-child(2) { grid-area: datos; }
+.item > :nth-child(3) { grid-area: unidad; }
+.item > :nth-child(4) { grid-area: subtotal; align-self: start; }
+.item > :nth-child(5) { grid-area: cantidad; }
+.item > :nth-child(6) { grid-area: quitar; justify-self: end; }
+
+.precioUnitario:empty {
+  display: none;
 }
 
 .imagen {
-  display: grid;
-  place-items: center;
   width: 64px;
   height: 80px;
-  background-color: var(--color-surface-alt);
-  border-radius: var(--radius);
   overflow: hidden;
   flex-shrink: 0;
 }
 
-.imagen .marco {
+.imagenMarco {
   width: 100%;
   height: 100%;
 }
@@ -38,8 +53,11 @@
 
 .nombre {
   margin: 0;
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-body-lg);
+  font-weight: 500;
+  line-height: 1.15;
   color: var(--color-text);
 }
 
@@ -51,14 +69,18 @@
 
 .precioUnitario {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.porUnidad {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .subtotal {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
 }
 
 .cantidad {
@@ -74,18 +96,21 @@
   width: var(--touch-target);
   height: var(--touch-target);
   padding: 0;
-  border: var(--border-width) solid var(--color-border-strong);
+  border: var(--rule-width) solid var(--color-border-strong);
   border-radius: var(--radius);
-  background-color: var(--color-surface);
+  background-color: transparent;
   color: var(--color-text);
   font-size: var(--font-size-body);
-  font-weight: var(--font-weight-semibold);
   line-height: 1;
   cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
 .botonAjuste:hover {
-  background-color: var(--color-surface-alt);
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 .botonAjuste:focus-visible {
@@ -94,68 +119,111 @@
 }
 
 .cantidadNumero {
+  min-width: var(--space-5);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-semibold);
-  min-width: var(--space-4);
+  font-variant-numeric: tabular-nums;
   text-align: center;
 }
 
 .resumen {
+  container-type: inline-size;
   display: grid;
-  gap: var(--space-4);
-  margin-top: var(--space-1);
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
 }
 
 .totalFila {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
 .totalEtiqueta {
-  font-size: var(--font-size-body-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   color: var(--color-text);
 }
 
 .totalImporte {
   margin: 0;
-  font-size: var(--font-size-price);
   display: inline-block;
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
 }
 
 .acciones {
   display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.pago {
+  display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.vaciar {
+  align-self: flex-start;
+  /* Alinea el texto (no el área de toque) con el borde del contenido. */
+  margin-inline-start: calc(-1 * var(--space-5));
 }
 
 .microcopy {
   margin: 0;
+  max-width: 42ch;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-label);
   color: var(--color-text-muted);
-  max-width: 42ch;
 }
 
-@media (min-width: 640px) {
+@container (min-width: 560px) {
   .item {
-    grid-template-columns: 64px 1fr auto auto auto auto;
+    grid-template-columns: 72px minmax(0, 1fr) auto auto auto auto;
+    grid-template-areas: "imagen datos unidad subtotal cantidad quitar";
     align-items: center;
   }
+
+  .item > :nth-child(1),
+  .item > :nth-child(4) {
+    align-self: center;
+  }
+
   .imagen {
     width: 72px;
     height: 90px;
   }
-  .acciones {
-    flex-direction: row;
-    align-items: center;
+
+  .precioUnitario,
+  .subtotal {
     justify-content: flex-end;
   }
+}
+
+@container (min-width: 560px) {
+  .acciones {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .vaciar {
+    align-self: center;
+  }
+
+  .pago {
+    align-items: flex-end;
+  }
+
   .microcopy {
-    max-width: 30ch;
+    max-width: 36ch;
     text-align: right;
   }
 }

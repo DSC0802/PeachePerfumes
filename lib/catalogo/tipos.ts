@@ -62,7 +62,16 @@ export interface Producto {
   destacado: boolean;
   /** Llega recientemente; muestra etiqueta "Nuevo". */
   novedad: boolean;
+  /**
+   * F3-C2 (HU-27): se puede comprar ahora. `false` = se muestra «Agotado» y no
+   * se añade al carrito. Es lo ÚNICO que sale del stock/estado del panel: la
+   * tienda nunca recibe cifras de stock ni el estado interno.
+   */
+  disponible: boolean;
 }
+
+/** Producto tal y como se escribe en `data/` (la disponibilidad la pone el repositorio). */
+export type ProductoDemo = Omit<Producto, "disponible">;
 
 export interface Categoria {
   id: string;

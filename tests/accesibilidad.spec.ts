@@ -116,3 +116,63 @@ for (const tema of ["light", "dark"] as const) {
     }
   });
 }
+
+/* ---------------------------------------------------------------------------
+   Panel admin (F3-C): mismas reglas y política de fallo, con sesión de admin.
+   Se salta si .env.local no trae ADMIN_EMAIL/ADMIN_PASSWORD.
+   --------------------------------------------------------------------------- */
+const RUTAS_PANEL = [
+  "/dashboard",
+  "/dashboard/productos",
+  "/dashboard/productos/nuevo",
+  "/dashboard/reportes",
+  "/dashboard/clientes",
+  "/dashboard/ajustes",
+  "/dashboard/pedidos",
+  "/dashboard/notificaciones",
+  // F3-D: páginas de compra con sesión (el admin también puede comprar).
+  "/pedido",
+  "/pedidos",
+];
+
+for (const tema of ["light", "dark"] as const) {
+  test.describe(`Accesibilidad del panel (axe-core) — tema ${tema}`, () => {
+    test.skip(
+      !process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD,
+      "Sin ADMIN_EMAIL/ADMIN_PASSWORD en .env.local",
+    );
+
+    test(`panel admin sin violaciones critical/serious (${tema})`, async ({ page }) => {
+      test.setTimeout(60_000);
+      await page.addInitScript((valor: string) => {
+        window.localStorage.setItem("peache-theme", valor);
+      }, tema);
+
+      await page.goto("/login");
+      await page.getByLabel("Email").fill(process.env.ADMIN_EMAIL!);
+      await page.getByLabel("Contraseña").fill(process.env.ADMIN_PASSWORD!);
+      await page.getByRole("button", { name: "Iniciar sesión" }).click();
+      await expect(page).toHaveURL("/dashboard", { timeout: 15_000 });
+
+      for (const ruta of RUTAS_PANEL) {
+        const respuesta = await page.goto(ruta);
+        expect(respuesta!.status(), `estado HTTP de ${ruta}`).toBe(200);
+        await expect(page.locator("html")).toHaveAttribute("data-theme", tema);
+
+        const resultado = await new AxeBuilder({ page }).withTags(ETIQUETAS_WCAG).analyze();
+        const bloqueantes = resultado.violations.filter((v) => esBloqueante(v.impact));
+        const ignoradas = resultado.violations.filter((v) => !esBloqueante(v.impact));
+        if (ignoradas.length > 0) {
+          console.warn(
+            `[axe] ${ruta} (${tema}) — ${ignoradas.length} moderate/minor no bloqueante(s): ` +
+              ignoradas.map((v) => v.id).join(", "),
+          );
+        }
+        const resumen = bloqueantes
+          .map((v) => `  - [${v.impact}] ${v.id}: ${v.help}\n${v.nodes.map((n) => `      ${n.html}`).join("\n")}`)
+          .join("\n");
+        expect(bloqueantes, `Violaciones en ${ruta} (${tema}):\n${resumen}`).toEqual([]);
+      }
+    });
+  });
+}

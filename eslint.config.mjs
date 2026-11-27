@@ -16,11 +16,15 @@ export default defineConfig([
     "build/**",
     "next-env.d.ts",
     "*.config.ts",
+    // Herramientas de diseño del usuario (skills y artefactos de impeccable): no son código de la tienda.
+    ".claude/**",
+    ".impeccable/**",
   ]),
 
   // Regla de arquitectura (docs/arquitectura.md §6): la UI sólo puede leer el
   // catálogo a través de `@/lib/catalogo`. `data/**` es exclusivo del repositorio
-  // en demo, para que sustituirlo por una API real no exija tocar componentes.
+  // en demo y de `db/seed.ts` (script de desarrollo), para que sustituirlo por
+  // una API real no exija tocar componentes.
   {
     files: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
     rules: {

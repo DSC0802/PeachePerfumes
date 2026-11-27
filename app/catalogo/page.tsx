@@ -3,15 +3,14 @@ import {
   catalogo,
   type FamiliaOlfativa,
   type OrdenCatalogo,
-  type Producto,
 } from "@/lib/catalogo";
-import type { DatosTarjeta } from "@/components/catalogo/TarjetaProducto";
 import RejillaCatalogo from "@/components/catalogo/RejillaCatalogo";
 import TarjetaProducto from "@/components/catalogo/TarjetaProducto";
+import { aDatosTarjeta } from "@/components/catalogo/datosTarjeta";
 import VistaCatalogo from "@/components/catalogo/VistaCatalogo";
 import { ORDEN_DEFECTO, esOrdenVisible } from "@/components/catalogo/ordenes";
 import Contenedor from "@/components/ui/Contenedor";
-import { FAMILIAS, nombreFamilia } from "@/components/landing/familias";
+import { FAMILIAS } from "@/components/landing/familias";
 
 /**
  * `/catalogo` (estados §2): Server Component. Lee `searchParams`, los
@@ -41,18 +40,6 @@ function esFamilia(valor: string): valor is FamiliaOlfativa {
   return FAMILIAS.some((entrada) => entrada.slug === valor);
 }
 
-/** `Producto` del repositorio → datos de la tarjeta (§7), meta «familia · envase». */
-function aTarjeta(producto: Producto): DatosTarjeta {
-  return {
-    slug: producto.slug,
-    nombre: producto.nombre,
-    meta: `${nombreFamilia(producto.familia)} · ${producto.tamano}`,
-    precio: producto.precio,
-    moneda: producto.moneda,
-    novedad: producto.novedad,
-    imagen: producto.imagen,
-  };
-}
 
 export default async function PaginaCatalogo({
   searchParams,
@@ -96,7 +83,7 @@ export default async function PaginaCatalogo({
   });
 
   return (
-    <Contenedor>
+    <Contenedor ancho="ancho">
       <VistaCatalogo
         q={q}
         orden={orden}
@@ -113,7 +100,7 @@ export default async function PaginaCatalogo({
             {productos.map((producto) => (
               <TarjetaProducto
                 key={producto.id}
-                producto={aTarjeta(producto)}
+                producto={aDatosTarjeta(producto)}
               />
             ))}
           </RejillaCatalogo>

@@ -1,20 +1,17 @@
-/* §3 de componentes.md — Enlace. Subrayado siempre visible (no es la única pista). */
+/* §3 de componentes.md — Enlace. Subrayado siempre visible (no es la única
+   pista). Revista: los enlaces van en tinta; el rosa queda para la acción
+   principal. Al pasar el puntero, el subrayado engorda. */
 
 .enlace {
-  color: var(--color-accent);
+  color: var(--color-text);
   text-decoration: underline;
-  text-decoration-thickness: var(--border-width);
-  text-underline-offset: 0.2em;
-  transition: color var(--duration-fast) var(--ease-in-out);
+  text-decoration-thickness: var(--rule-width);
+  text-underline-offset: 0.25em;
+  transition: text-decoration-thickness var(--duration-fast) var(--ease-out);
 }
 
 .enlace:hover {
-  color: var(--color-accent-hover);
+  text-decoration-thickness: var(--rule-width-strong);
 }
 
-.enlace:active {
-  color: var(--color-accent-active);
-}
-
-/* :visited se queda igual — cambiar el color de visitados rompe la regla
-   "acento = enlace" (§3). El anillo de foco lo aplica globals.css. */
+/* El anillo de foco lo aplica globals.css. */

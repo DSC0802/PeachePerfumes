@@ -1,4 +1,4 @@
-import type { Producto } from "@/lib/catalogo/tipos";
+import type { ProductoDemo } from "@/lib/catalogo/tipos";
 
 /**
  * PRODUCTOS DE DEMOSTRACIÓN — ver data/README.md.
@@ -16,7 +16,7 @@ import type { Producto } from "@/lib/catalogo/tipos";
  * Las rutas `imagen.src` apuntan a /public/productos/*.webp, archivos que aún no
  * existen: la interfaz debe mostrar un placeholder neutral (no son URLs remotas).
  */
-export const productos: Producto[] = [
+export const productos: ProductoDemo[] = [
   {
     id: "p001",
     slug: "brisa-de-coco-100",

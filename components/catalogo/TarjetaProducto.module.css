@@ -1,25 +1,11 @@
-/* §7 de componentes.md — Tarjeta de producto. Estados: default, hover
-   (borde fuerte + shadow-1, sin escalar), active, focus-visible (anillo en
-   el enlace que cubre la tarjeta), agotado (badge, sin ocultar nada). */
+/* Tarjeta de producto (mundo «revista», 2026-11-07): foto sin marco y pie de
+   foto debajo, sobre el mismo papel. Estados: default, hover (la foto se
+   acerca y el nombre se subraya, sólo con puntero fino), focus-visible
+   (anillo en el enlace), agotado (insignia, sin ocultar nada). */
 
 .tarjeta {
   display: flex;
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition:
-    border-color var(--duration-fast) var(--ease-in-out),
-    background-color var(--duration-fast) var(--ease-in-out);
-}
-
-.tarjeta:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-1);
-}
-
-.tarjeta:active {
-  background-color: var(--color-surface-alt);
+  position: relative;
 }
 
 .enlace {
@@ -30,28 +16,74 @@
   text-decoration: none;
 }
 
+.media {
+  position: relative;
+  overflow: hidden;
+}
+
+.media :global(img) {
+  transition: transform 600ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .enlace:hover .media :global(img) {
+    transform: scale(1.03);
+  }
+
+  .enlace:hover .nombre {
+    background-size: 100% 1px;
+  }
+}
+
+.etiquetas {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Las etiquetas van sobre la foto: fondo de papel para que se lean. */
+.etiquetas > * {
+  background-color: var(--color-bg);
+}
+
 .cuerpo {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
+  gap: var(--space-1);
+  padding-top: var(--space-3);
 }
 
-/* Nombre: sans 600 (no la serif de titulares), máx. 2 líneas y alto mínimo
-   para que las filas de precios no bailen entre tarjetas (§7) */
-.nombre {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-h4);
+.marca {
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-normal);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nombre {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-h3);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
   color: var(--color-text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: calc(2 * var(--font-size-h4) * var(--line-height-heading));
+  /* Subrayado que se dibuja al pasar el puntero (ver arriba). */
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--duration-slow) var(--ease-out);
 }
 
 .meta {
@@ -63,7 +95,19 @@
   text-overflow: ellipsis;
 }
 
-/* Los precios de la fila comparten línea (§8) */
+/* El precio cierra la tarjeta, alineado en la misma línea en toda la fila. */
 .precio {
   margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media :global(img),
+  .nombre {
+    transition: none;
+  }
+
+  .enlace:hover .media :global(img) {
+    transform: none;
+  }
 }

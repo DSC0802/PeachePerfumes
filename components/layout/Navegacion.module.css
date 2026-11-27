@@ -17,6 +17,7 @@
   gap: var(--space-2);
 }
 
+/* Revista: versalitas espaciadas; la página actual, subrayada en tinta. */
 .enlace {
   display: inline-flex;
   align-items: center;
@@ -24,24 +25,35 @@
   padding-inline: var(--space-2);
   color: var(--color-text-muted);
   font-family: var(--font-sans);
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-in-out);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: var(--rule-width);
+  text-underline-offset: 0.45em;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    text-decoration-color var(--duration-fast) var(--ease-out);
 }
 
 .enlace:hover {
   color: var(--color-text);
-}
-
-.enlace:active {
-  color: var(--color-accent-active);
+  text-decoration-color: currentColor;
 }
 
 .enlace[aria-current="page"] {
   color: var(--color-text);
-  text-decoration: underline;
-  text-decoration-thickness: var(--focus-width);
-  text-decoration-color: var(--color-accent);
-  text-underline-offset: 0.2em;
+  text-decoration-color: currentColor;
+}
+
+/* En el menú lateral del móvil los enlaces son titulares de índice. */
+.navegacion--vertical .enlace {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-tight);
+  text-transform: none;
+  border-bottom: var(--rule-width) solid var(--color-border);
 }

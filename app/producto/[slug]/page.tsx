@@ -17,15 +17,13 @@ import VolverCatalogo from "@/components/producto/VolverCatalogo";
 const LIMITE_RELACIONADOS = 4;
 
 /**
- * Los 14 slugs se generan en `generateStaticParams`; cualquier otro se rechaza
- * en el enrutador ANTES de que arranque el stream de `loading.tsx`, que en
- * Next 16 fijaría la respuesta a `200` (guía `loading.md` §Status codes).
- * Así el 404 sale con status real; el `notFound()` de la página sigue siendo
- * la red de seguridad de datos (slug que exista en el mapa pero no tenga
- * producto), tal como pide `api-contracto.md` §6.4.
+ * Desde F3-C el catálogo cambia en tiempo de ejecución (el admin crea
+ * productos desde el panel): cualquier slug se resuelve en cada petición y
+ * `notFound()` responde por los que no existen, están ocultos o
+ * descontinuados. `generateStaticParams` sólo precalienta los existentes.
+ * (Antes `dynamicParams = false` rechazaba en `next dev` todo producto creado
+ * después de compilar.)
  */
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   const productos = await catalogo.listarProductos();
   return productos.map((producto) => ({ slug: producto.slug }));
@@ -66,7 +64,7 @@ export default async function PaginaFichaProducto({
     categorias.find((entrada) => entrada.id === producto.categoriaId) ?? null;
 
   return (
-    <Contenedor>
+    <Contenedor ancho="ancho">
       <FichaProducto producto={producto} categoria={categoria} />
       <ProductosRelacionados productos={relacionados} />
       <VolverCatalogo />

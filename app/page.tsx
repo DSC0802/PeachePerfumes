@@ -1,87 +1,74 @@
 import type { Metadata } from "next";
 import { catalogo, type Producto } from "@/lib/catalogo";
-import type { DatosTarjeta } from "@/components/catalogo/TarjetaProducto";
-import BloqueEditorial from "@/components/landing/BloqueEditorial";
-import Hero from "@/components/landing/Hero";
+import Hojeador from "@/components/landing/Hojeador";
+import PasosPedido from "@/components/landing/PasosPedido";
 import Portada from "@/components/landing/Portada";
-import SeccionDestacados from "@/components/landing/SeccionDestacados";
-import SeccionExplorar from "@/components/landing/SeccionExplorar";
-import { nombreFamilia } from "@/components/landing/familias";
+import SeccionExplorar, { type FilaFamilia } from "@/components/landing/SeccionExplorar";
+import { FAMILIAS } from "@/components/landing/familias";
 
 /**
- * Portada (estados §3.1): hero (único `h1`) → destacados → novedades →
- * navegación a familias/categorías → bloque editorial. Sólo Server Components
- * y datos desde `@/lib/catalogo` (frontera de abstracción, arquitectura §6).
- * El aviso de datos de demostración vive en `app/layout.tsx` (R3, todo el
- * sitio: una sola copia, sin duplicar).
+ * Portada (mundo «revista de perfumes», 2026-11-07): portada con el perfume
+ * destacado → «En este número», un perfume por página que se hojea →
+ * índice por familias → cómo comprar. Datos desde `@/lib/catalogo`; el aviso
+ * de demostración vive en `app/layout.tsx`.
  */
 
-/** Presupuesto de la portada: destacados 4–8 tarjetas (estados §3.1). */
-const LIMITE_DESTACADOS = 8;
-const LIMITE_NOVEDADES = 4;
+const LIMITE_PAGINAS = 8;
 
-// El título lo aporta el layout (`Peache Perfumes` + template); aquí la
-// descripción de la portada. Sin URL de producción hasta la decisión D4.
 export const metadata: Metadata = {
   description:
-    "Peache Perfumes: selección corta de perfumes contada por sus notas de salida, corazón y fondo. Tienda de demostración.",
+    "Peache Perfumes: perfumes originales en Cuba con precio publicado y pago en efectivo al recibir. Tienda de demostración.",
 };
 
-/** `Producto` del repositorio → datos de la tarjeta (§7), meta «familia · envase». */
-function aTarjeta(producto: Producto): DatosTarjeta {
-  return {
-    slug: producto.slug,
-    nombre: producto.nombre,
-    meta: `${nombreFamilia(producto.familia)} · ${producto.tamano}`,
-    precio: producto.precio,
-    moneda: producto.moneda,
-    novedad: producto.novedad,
-    imagen: producto.imagen,
-  };
+/** Perfume de portada: el primer destacado disponible con foto; si ninguno tiene, el primero disponible. */
+function productoDePortada(destacados: Producto[]): Producto | null {
+  const disponibles = destacados.filter((p) => p.disponible);
+  // Sólo las fotos subidas desde el panel viven en /imagenes/; las rutas de la demo no tienen archivo.
+  return disponibles.find((p) => p.imagen.src.startsWith("/imagenes/")) ?? disponibles[0] ?? null;
+}
+
+/** Recuento y notas más repetidas por familia, a partir del catálogo real. */
+function indiceFamilias(productos: Producto[]): FilaFamilia[] {
+  return FAMILIAS.map(({ slug, nombre }) => {
+    const deFamilia = productos.filter((p) => p.familia === slug);
+    const frecuencia = new Map<string, number>();
+    for (const p of deFamilia) {
+      for (const nota of [...p.notas.salida, ...p.notas.corazon, ...p.notas.fondo]) {
+        const clave = nota.trim().toLowerCase();
+        frecuencia.set(clave, (frecuencia.get(clave) ?? 0) + 1);
+      }
+    }
+    const notas = [...frecuencia.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "es"))
+      .slice(0, 4)
+      .map(([nota]) => nota);
+    return { slug, nombre, total: deFamilia.length, notas };
+  });
 }
 
 export default async function PaginaInicio() {
-  const [destacados, novedades, categorias] = await Promise.all([
+  const [destacados, todos, categorias] = await Promise.all([
     catalogo.listarProductos({ orden: "destacados" }),
-    catalogo.listarProductos({ orden: "novedades" }),
+    catalogo.listarProductos(),
     catalogo.listarCategorias(),
   ]);
+  const enPortada = productoDePortada(destacados);
+  // Las páginas del número: los destacados, sin repetir el de portada.
+  const paginas = destacados.filter((p) => p.slug !== enPortada?.slug).slice(0, LIMITE_PAGINAS);
 
   return (
-    <Portada>
-      <Hero
-        titulo="Elige por notas, no por etiquetas"
-        entradilla="Una selección corta de perfumes, contada por sus notas de salida, de corazón y de fondo, para elegir sin prisa."
-        cta={{ etiqueta: "Ver el catálogo", href: "/catalogo" }}
+    <>
+      <Portada
+        titulo="Perfumes originales. Pagas al recibirlos."
+        entradilla="Precio publicado y pago en efectivo contra entrega: eliges en la web y no adelantas ni un peso."
+        producto={enPortada}
       />
 
-      <SeccionDestacados
-        idTitulo="destacados"
-        productos={destacados.slice(0, LIMITE_DESTACADOS).map(aTarjeta)}
-      />
+      <Hojeador productos={paginas} />
 
-      <SeccionDestacados
-        idTitulo="novedades"
-        titulo="Novedades"
-        productos={novedades.slice(0, LIMITE_NOVEDADES).map(aTarjeta)}
-      />
+      <SeccionExplorar familias={indiceFamilias(todos)} categorias={categorias} />
 
-      <SeccionExplorar categorias={categorias} />
-
-      <BloqueEditorial
-        titulo="Un perfume se descubre por capas"
-        enlace={{ etiqueta: "Ver todo", href: "/catalogo" }}
-      >
-        <p>
-          Un perfume no huele igual a los cinco minutos que al final del día: la
-          salida abre, el corazón se asienta y el fondo permanece. Esa secuencia es
-          la pirámide olfativa.
-        </p>
-        <p>
-          Cada ficha la describe con palabras —bergamota, cedro, vainilla— para que
-          sepas qué vas a oler, no sólo cómo se ve el frasco.
-        </p>
-      </BloqueEditorial>
-    </Portada>
+      <PasosPedido />
+    </>
   );
 }

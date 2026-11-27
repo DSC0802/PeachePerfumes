@@ -4,20 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ConmutadorTema from "@/components/theme/ConmutadorTema";
+import ConmutadorMoneda from "@/components/moneda/ConmutadorMoneda";
 import Carrito from "@/components/carrito/Carrito";
 import { useCarrito } from "@/components/carrito/CarritoContexto";
 import HojaModal from "@/components/ui/HojaModal";
 import Marca from "@/components/ui/Marca";
 import Navegacion from "./Navegacion";
+import CuentaAcciones, { type CuentaCabecera } from "./CuentaAcciones";
 import styles from "./Cabecera.module.css";
 
-/**
- * §5 de docs/design/componentes.md — Cabecera + menú móvil.
- * Sticky, altura por token; orden visual y de foco: logo → nav → acciones.
- * El selector de tema siempre visible en todos los breakpoints (§5).
- * Ahora incluye el acceso al carrito (estado local, clave `peache-carrito`).
- */
-export default function Cabecera() {
+export interface CabeceraProps {
+  cuenta?: CuentaCabecera | null;
+}
+
+export default function Cabecera({ cuenta }: CabeceraProps = {}) {
   const rutaActual = usePathname();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [carritoAbierto, setCarritoAbierto] = useState(false);
@@ -43,7 +43,9 @@ export default function Cabecera() {
         </div>
 
         <div className={styles.acciones}>
+          <ConmutadorMoneda />
           <ConmutadorTema />
+          <CuentaAcciones cuenta={cuenta ?? null} />
           <button
             type="button"
             className={styles.menu}
@@ -80,10 +82,9 @@ export default function Cabecera() {
               strokeLinejoin="round"
               aria-hidden="true"
             >
-              <circle cx="4" cy="16" r="1.5" />
-              <circle cx="15" cy="16" r="1.5" />
-              <path d="M2 12h2l1 4h10l1-4h2" />
-              <path d="M8.5 12h3v-2h-3z" />
+              {/* Bolsa de compra */}
+              <path d="M4.5 6.5h11l-.8 10.2a1 1 0 0 1-1 .8H6.3a1 1 0 0 1-1-.8z" />
+              <path d="M7.5 8.5V5.5a2.5 2.5 0 0 1 5 0v3" />
             </svg>
             {totalItems > 0 && (
               <span className={styles.insignia} aria-hidden="true">
@@ -107,6 +108,11 @@ export default function Cabecera() {
           orientacion="vertical"
           onNavegar={() => setMenuAbierto(false)}
         />
+        <CuentaAcciones
+          cuenta={cuenta ?? null}
+          orientacion="vertical"
+          onNavegar={() => setMenuAbierto(false)}
+        />
       </HojaModal>
 
       <HojaModal
@@ -117,7 +123,7 @@ export default function Cabecera() {
         etiquetaCerrar="Cerrar carrito"
         variante="inferior"
       >
-        <Carrito />
+        <Carrito alNavegar={() => setCarritoAbierto(false)} />
       </HojaModal>
     </header>
   );

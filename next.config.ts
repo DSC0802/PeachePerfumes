@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
     // de forma explícita (nunca `remotePatterns` abierto).
     formats: ["image/avif", "image/webp"],
   },
+
+  // `pg` solo existe en el servidor (Node runtime). Evitar que Turbopack intente
+  // bundlarlo para el cliente al importar server actions de identidad.
+  serverExternalPackages: ["pg"],
+
+  // F3-C: las fotos de producto se suben con una server action (máx. 4 MB
+  // validado en lib/admin/imagenes.ts). 5 MB deja margen al multipart.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
 };
 
 export default nextConfig;

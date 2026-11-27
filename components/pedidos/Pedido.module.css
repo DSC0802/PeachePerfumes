@@ -1,0 +1,268 @@
+/* Vale de pedido (revisión, confirmación y «Mis pedidos»). Revista: una hoja
+   del mismo papel, abierta por un filete de tinta; líneas entre filetes y
+   cifras tabulares. Sin perforado, copias ni cuños. */
+
+.vale {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* En la página del pedido el vale va tras otras secciones: lo abre un filete. */
+.secciones .vale {
+  padding-top: var(--space-4);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.valeCabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.valeTipo,
+.valeCabecera > p {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* «Pagas al recibir», junto al rótulo del vale: dato, en gris. */
+.pagoRotulo {
+  color: var(--color-text-muted);
+}
+
+.lineas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule-width) solid var(--color-rule);
+}
+
+.linea {
+  display: grid;
+  grid-template-columns: 3.5ch minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.lineaFuera {
+  color: var(--color-text-muted);
+}
+
+.lineaFuera .nombreLinea {
+  text-decoration: line-through;
+}
+
+.cantidad {
+  font-weight: var(--font-weight-semibold);
+}
+
+.nombreLinea {
+  display: grid;
+  gap: var(--space-1);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-body-lg);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.nombreLinea a {
+  color: inherit;
+}
+
+.secundario {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
+
+.aviso {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-warning);
+  text-decoration: none;
+}
+
+.importeLinea p {
+  margin: 0;
+}
+
+.total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.totalCifra {
+  margin: 0;
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: end;
+}
+
+.nota {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.avisoGeneral,
+.error {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--rule-width) solid;
+  font-size: var(--font-size-sm);
+}
+
+.avisoGeneral {
+  border-color: var(--color-warning);
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.cargando {
+  color: var(--color-text-muted);
+}
+
+.confirmar {
+  width: 100%;
+}
+
+/* ---- Página del pedido ---- */
+
+.volver {
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.volver a {
+  color: var(--color-text);
+}
+
+.secciones {
+  display: grid;
+  gap: var(--space-8);
+}
+
+/* El último paso tras confirmar: banda gris con filete, sin color. */
+.recibido {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+  background-color: var(--color-surface-alt);
+}
+
+.recibido p {
+  margin: 0;
+}
+
+.whatsapp {
+  justify-self: start;
+}
+
+.estado {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.estado p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.subtitulo {
+  font-size: var(--font-size-h3);
+}
+
+/* Línea de estados: cada paso con su fecha. */
+.historial {
+  display: grid;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule-width) solid var(--color-rule);
+}
+
+.paso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.paso time {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- Lista «Mis pedidos» ---- */
+
+.lista {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filaPedido {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-width) solid var(--color-border);
+  color: inherit;
+  text-decoration: none;
+}
+
+.filaPedido p {
+  margin: 0;
+}
+
+.numero {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  font-weight: 500;
+  line-height: 1;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--duration-slow) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .filaPedido:hover .numero {
+    background-size: 100% 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .numero {
+    transition: none;
+  }
+}

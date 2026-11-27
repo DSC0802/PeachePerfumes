@@ -2,7 +2,7 @@
 
 import type { Categoria, Producto } from "@/lib/catalogo";
 import { nombreFamilia } from "@/components/landing/familias";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Boton from "@/components/ui/Boton";
 import Enlace from "@/components/ui/Enlace";
 import Etiqueta from "@/components/ui/Etiqueta";
@@ -13,38 +13,41 @@ import NotasOlfativas from "./NotasOlfativas";
 import styles from "./FichaProducto.module.css";
 
 /**
- * §3.2 de `estados-y-responsividad.md` — anatomía de `/producto/[slug]`:
- * migas → galería `1/1` → `h1` + badge → meta (familia · envase) → precio
- * (variante ficha) + CTA + ayuda → descripción → pirámide olfativa.
- * Mobile-first apilado; `≥1024px` dos columnas `1.1fr / 0.9fr` con la galería
- * sticky (§3.2 «Responsive»). Un único `h1` (el nombre del perfume) y
- * jerarquía `h2`/`h3` sin saltos (arquitectura §8). El dinero se pinta SÓLO
- * con `Precio` (D-DINERO-1); la marca no se inventa ni se concatena.
- *
- * El CTA "Añadir al carrito" es ahora funcional (estado local del carrito,
- * clave `peache-carrito`) y confirma la adición con un estado temporal.
+ * Ficha de `/producto/[slug]` como página de revista (2026-11-07): migas →
+ * foto a la izquierda (sticky ≥1024px) → marca, nombre como titular y
+ * descripción como entradilla → datos clave → precio + compra → notas.
+ * Un único `h1` (el nombre del perfume) y jerarquía `h2`/`h3` sin saltos. El
+ * dinero se pinta SÓLO con `Precio` (D-DINERO-1).
  */
 export interface FichaProductoProps {
   producto: Producto;
-  /** `null` si `categoriaId` no resuelve: se omite el badge y nada más. */
+  /** `null` si `categoriaId` no resuelve: se omite ese dato y nada más. */
   categoria: Categoria | null;
 }
 
-export default function FichaProducto({
-  producto,
-  categoria,
-}: FichaProductoProps) {
+export default function FichaProducto({ producto, categoria }: FichaProductoProps) {
   const { agregarProducto } = useCarrito();
   const [confirmacion, setConfirmacion] = useState(false);
+  const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Limpia el aviso pendiente al salir de la página (evita setState tras desmontar).
+  useEffect(
+    () => () => {
+      if (temporizador.current) clearTimeout(temporizador.current);
+    },
+    [],
+  );
 
   const manejarAgregarAlCarrito = () => {
     agregarProducto(producto);
     setConfirmacion(true);
-    setTimeout(() => setConfirmacion(false), 2500);
+    // Pulsaciones seguidas reinician la ventana en vez de apilar temporizadores.
+    if (temporizador.current) clearTimeout(temporizador.current);
+    temporizador.current = setTimeout(() => setConfirmacion(false), 2500);
   };
+
   return (
     <article className={styles.ficha}>
-      {/* §3.2.1 — migas: Inicio / Catálogo / {nombre}; el último, texto plano */}
       <nav aria-label="Migas de pan">
         <ol className={styles.migas}>
           <li>
@@ -59,63 +62,99 @@ export default function FichaProducto({
 
       <div className={styles.cuerpo}>
         <div className={styles.galeria}>
-          {/* §3.2.2 + §14: imagen principal `1/1`, alt real del dato y
-              `prioridad` porque es el LCP de la ficha (§14.6). Las fotos no
-              existen a propósito (D-IMAGENES): MarcoImagen pinta el
-              placeholder con el imagotipo «PP» (D-MONOGRAMA). */}
-          <MarcoImagen variante="ficha" imagen={producto.imagen} prioridad />
+          {/* LCP de la ficha: `prioridad`. Sin foto, MarcoImagen pinta el hueco. */}
+          <MarcoImagen
+            variante="ficha"
+            imagen={producto.imagen}
+            prioridad
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className={styles.foto}
+          />
         </div>
 
         <div className={styles.detalle}>
           <header className={styles.encabezado}>
+            {/* Procedencia: dato del producto, no antetítulo decorativo. */}
             <p className={styles.marca}>{producto.marca}</p>
-            <div className={styles.tituloFila}>
-              <h1 className={styles.titulo} tabIndex={-1}>
-                {producto.nombre}
-              </h1>
-              {producto.novedad ? (
+            <h1 className={styles.titulo} tabIndex={-1}>
+              {producto.nombre}
+            </h1>
+            {producto.novedad ? (
+              <div>
                 <Etiqueta variante="acento">Nuevo</Etiqueta>
-              ) : null}
-            </div>
-            {/* §3.2.4 — meta: familia · envase + badge neutral de categoría (§4) */}
-            <p className={styles.meta}>
-              {`${nombreFamilia(producto.familia)} · ${producto.tamano}`}
-              {categoria ? (
-                <Etiqueta variante="neutral">{categoria.nombre}</Etiqueta>
-              ) : null}
-            </p>
+              </div>
+            ) : null}
+            <p className={styles.entradilla}>{producto.descripcion}</p>
           </header>
 
-          {/* §3.2.5 — precio (variante ficha, §10) + CTA de carrito demo:
-              acción funcional que añade al carrito de estado local y confirma
-              con un estado temporal. El pago online sigue no disponible. */}
-          <div className={styles.compra}>
-            <Precio valor={producto.precio} moneda={producto.moneda} variante="ficha" />
-            <div className={styles.cta}>
-              <Boton variante="primario" onClick={manejarAgregarAlCarrito}>
-                Añadir al carrito
-              </Boton>
-              {confirmacion ? (
-                <p className={styles.ctaConfirmacion} role="status" aria-live="polite">
-                  Añadido al carrito
-                </p>
-              ) : (
-                <p className={styles.ctaAyuda}>
-                  La compra online estará disponible próximamente.
-                </p>
-              )}
+          <dl className={styles.datos}>
+            <div className={styles.dato}>
+              <dt>Familia</dt>
+              <dd>{nombreFamilia(producto.familia)}</dd>
             </div>
-          </div>
+            <div className={styles.dato}>
+              <dt>Tamaño</dt>
+              <dd className="cifras">{producto.tamano}</dd>
+            </div>
+            {categoria ? (
+              <div className={styles.dato}>
+                <dt>Para</dt>
+                <dd>{categoria.nombre}</dd>
+              </div>
+            ) : null}
+          </dl>
 
-          <section
-            className={styles.descripcion}
-            aria-labelledby="ficha-descripcion"
-          >
-            <h2 id="ficha-descripcion" className={styles.subtitulo}>
-              Descripción olfativa
-            </h2>
-            <p className={styles.texto}>{producto.descripcion}</p>
-          </section>
+          <div className={styles.compra}>
+            <Precio
+              valor={producto.precio}
+              moneda={producto.moneda}
+              variante="ficha"
+              className={styles.precio}
+            />
+            <p className={styles.pago}>Pagas en efectivo cuando lo recibes. Nunca por adelantado.</p>
+
+            {producto.disponible ? (
+              <div className={styles.cta}>
+                <Boton
+                  variante="primario"
+                  tamano="lg"
+                  className={styles.ctaBoton}
+                  onClick={manejarAgregarAlCarrito}
+                >
+                  {/* Las dos etiquetas ocupan la misma celda: el ancho no salta. */}
+                  <span className={styles.ctaEtiquetas}>
+                    <span className={styles.ctaEtiqueta} data-visible={!confirmacion}>
+                      Añadir al carrito
+                    </span>
+                    <span className={styles.ctaEtiqueta} data-visible={confirmacion} aria-hidden="true">
+                      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                        <path
+                          d="M3 8.5l3.2 3L13 4.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="square"
+                        />
+                      </svg>
+                      Añadido
+                    </span>
+                  </span>
+                </Boton>
+                {/* Región viva siempre presente: el lector anuncia el cambio. */}
+                <p className={styles.ctaAyuda} role="status" aria-live="polite">
+                  {confirmacion ? "Añadido al carrito" : ""}
+                </p>
+              </div>
+            ) : (
+              /* HU-27: agotado se muestra, pero no se compra. */
+              <div className={styles.cta}>
+                <Boton variante="primario" tamano="lg" className={styles.ctaBoton} disabled>
+                  Agotado
+                </Boton>
+                <p className={styles.ctaAyuda}>Ahora mismo no lo tenemos. Vuelve a mirar en unos días.</p>
+              </div>
+            )}
+          </div>
 
           <NotasOlfativas notas={producto.notas} />
         </div>

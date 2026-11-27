@@ -73,8 +73,12 @@ function obtenerSnapshot(): ItemCarrito[] {
   return estadoCarrito;
 }
 
+// Referencia estable: useSyncExternalStore exige que el snapshot del servidor
+// no cambie entre llamadas.
+const CARRITO_VACIO: ItemCarrito[] = [];
+
 function obtenerSnapshotEnServidor(): ItemCarrito[] {
-  return [];
+  return CARRITO_VACIO;
 }
 
 function suscribir(onCambio: () => void) {

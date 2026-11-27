@@ -1,0 +1,200 @@
+/* Listado de productos del panel (F3-C). */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-4);
+  margin-block-end: var(--space-5);
+}
+
+.campo {
+  display: grid;
+  gap: var(--space-1);
+  flex: 1 1 12rem;
+}
+
+.campo label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.campo input,
+.campo select,
+.estadoForm select {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: var(--rule-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+}
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+}
+
+.casilla input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-text);
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.producto {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 14rem;
+  font-weight: var(--font-weight-medium);
+}
+
+/* MarcoImagen en miniatura: anula la proporción de tarjeta. */
+.miniatura {
+  flex-shrink: 0;
+  width: 40px !important;
+  height: 50px !important;
+  aspect-ratio: 4 / 5 !important;
+}
+
+.stockBajo {
+  font-weight: var(--font-weight-semibold);
+}
+
+.estadoForm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.estadoForm select {
+  min-height: 36px;
+  padding-inline: var(--space-2);
+}
+
+.filaAcciones {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  white-space: nowrap;
+}
+
+.filaAcciones form {
+  display: contents;
+}
+
+.botonTexto {
+  min-height: 36px;
+  padding: 0 var(--space-1);
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-width);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.botonTexto:hover {
+  text-decoration-thickness: var(--rule-width-strong);
+}
+
+/* «Quitar» va en tinta como «Editar»: lo protege la confirmación, no el color. */
+.peligro {
+  color: var(--color-text);
+}
+
+/* Sin opacidad: bajaría el contraste del texto (WCAG). La insignia «Oculto» lo indica. */
+.filaOculta {
+  background-color: var(--color-surface-alt);
+}
+
+/* Móvil: cada producto es un bloque apilado (sin scroll lateral). Arriba el
+   nombre; luego precio y stock en tabulares; debajo estado, visibilidad y
+   acciones. La categoría se omite: ya la filtra el buscador. */
+@media (max-width: 47.99rem) {
+  table.apilada thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  table.apilada > tbody > tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-3) var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: var(--rule-width) solid var(--color-border);
+  }
+
+  table.apilada > tbody > tr > th,
+  table.apilada > tbody > tr > td {
+    padding: 0;
+    border: 0;
+  }
+
+  table.apilada > tbody > tr > th {
+    grid-column: 1 / -1;
+  }
+
+  table.apilada > tbody > tr > td:nth-child(2) {
+    display: none;
+  }
+
+  table.apilada > tbody > tr > td:nth-child(3),
+  table.apilada > tbody > tr > td:nth-child(4) {
+    text-align: start !important;
+  }
+
+  table.apilada > tbody > tr > td:nth-child(3)::before,
+  table.apilada > tbody > tr > td:nth-child(4)::before {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  table.apilada > tbody > tr > td:nth-child(3)::before {
+    content: "Precio";
+  }
+
+  table.apilada > tbody > tr > td:nth-child(4)::before {
+    content: "Stock";
+  }
+
+  table.apilada > tbody > tr > td:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  table.apilada > tbody > tr > td:nth-child(7) .filaAcciones {
+    justify-content: flex-end;
+  }
+
+  .producto {
+    min-width: 0;
+  }
+}

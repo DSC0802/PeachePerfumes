@@ -1,8 +1,9 @@
 /* §6 de componentes.md — Pie. Apilado en móvil, 3 columnas en ≥768px. */
 
+/* Revista: el colofón, sobre el mismo papel y tras un filete de tinta. */
 .pie {
-  background-color: var(--color-surface-alt);
-  border-top: var(--border-width) solid var(--color-border);
+  background-color: var(--color-bg);
+  border-top: var(--rule-width) solid var(--color-rule);
   padding-block: var(--space-8);
 }
 
@@ -37,11 +38,16 @@
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
 }
 
 .copyright {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   line-height: var(--line-height-label);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   color: var(--color-text-muted);
 }
 

@@ -106,8 +106,11 @@ PeachePerfumes/
 ├── tsconfig.json                 # strict: true, alias "@//*" -> "./*"
 ├── next.config.ts                # config mínima; sin remotePatterns en Fase 2
 ├── eslint.config.mjs             # ESLint flat config nativo de Next 16
+├── drizzle.config.ts             # configuración de drizzle-kit (migraciones)
+├── proxy.ts                      # F3-B: guard de /dashboard (Next 16; NO middleware.ts)
 ├── .gitignore                    # .next/, node_modules/, .env*
 ├── .env.local.example            # documenta variables FUTURAS (sin secretos)
+├── .env.local                    # gitignored: DATABASE_URL, FUENTE_CATALOGO
 │
 ├── app/                          # App Router: rutas = carpetas
 │   ├── layout.tsx                # raíz: <html lang="es">, script anti-FOUC, <Header/>, <Footer/>
@@ -117,10 +120,20 @@ PeachePerfumes/
 │   ├── fonts/                    # *.woff2 para next/font/local (fuentes locales, sin red)
 │   ├── catalogo/
 │   │   └── page.tsx              # /catalogo -> lee searchParams (categoria, orden, q)
-│   └── producto/
-│       ├── page.tsx              # /producto -> redirect('/catalogo') (evita 404 por tecleo directo)
-│       └── [slug]/
-│           └── page.tsx          # /producto/[slug] -> generateStaticParams + ficha
+│   ├── producto/
+│   │   ├── page.tsx              # /producto -> redirect('/catalogo') (evita 404 por tecleo directo)
+│   │   └── [slug]/
+│   │       └── page.tsx          # /producto/[slug] -> generateStaticParams + ficha
+│   ├── login/page.tsx            # /login -> server action iniciarSesion (?next= validado)
+│   ├── registro/page.tsx         # /registro -> registrarUsuario (auto-login)
+│   ├── perfil/page.tsx           # /perfil -> sesión obligatoria (HU-15)
+│   ├── imagenes/[archivo]/route.ts # F3-C: sirve las fotos subidas (almacen/imagenes/)
+│   └── dashboard/                # F3-C: panel admin (spec 2026-11-05-f3c-panel-admin-design.md)
+│       ├── layout.tsx            # requerirAdmin() + shell con barra lateral
+│       ├── page.tsx              # resumen: KPI, gráficos, stock bajo, accesos
+│       ├── productos/            # listado + nuevo/ + [id]/editar/ (CRUD con foto)
+│       ├── reportes/             # gráficos y tablas + csv/route.ts
+│       └── clientes/page.tsx     # cuentas registradas (sólo lectura)
 │
 ├── components/                   # ORGANIZACIÓN POR DOMINIO (ver justificación abajo)
 │   ├── layout/                   # piezas transversales de la página
@@ -154,11 +167,50 @@ PeachePerfumes/
 │
 ├── lib/                          # LÓGICA (sin JSX)
 │   ├── catalogo/                 # >>> FRONTERA DE ABSTRACCIÓN DE DATOS (sección 6)
-│   │   ├── tipos.ts              # Producto, Categoria, ProductoFiltro, Moneda
-│   │   ├── repositorio.ts        # interface CatalogoRepositorio
-│   │   ├── repositorio-demo.ts   # implementación Fase 2 (importa de ../../data)
-│   │   └── index.ts              # ÚNICO punto de entrada exportado al exterior
-│   └── dinero.ts                 # formatearPrecio() -> "$2,500 CUP"
+│       ├── tipos.ts              # Producto, Categoria, ProductoFiltro, Moneda
+│       ├── repositorio.ts        # interface CatalogoRepositorio
+│       ├── repositorio-demo.ts   # implementación Fase 2 (importa de ../../data)
+│       ├── repositorio-postgres.ts # implementación PostgreSQL
+│       ├── filtro.ts             # filtros/orden compartidos demo⇄Postgres
+│       └── index.ts              # ÚNICO punto de entrada exportado al exterior
+│   └── auth/                     # F3-B: identidad (pool PROPIO, spec F3-B §5)
+│       ├── base.ts               # pool perezoso de auth (max 5) + obtenerBase()
+│       ├── constantes.ts         # nombre y duración de la cookie
+│       ├── tipos.ts              # Rol, Usuario, CredencialUsuario
+│       ├── contrasena.ts         # scrypt hash/verify (node:crypto, 0 deps)
+│       ├── validadores.ts        # email, ?next= (anti open-redirect)
+│       ├── repositorio-usuarios.ts # alta/búsqueda/perfil (Drizzle)
+│       ├── sesiones.ts           # token SHA-256 + cookie peache-sesion (30 d)
+│       ├── acceso.ts             # capa next/headers: obtenerSesionActual, requerirAdmin
+│       ├── acciones.ts           # "use server": login/registro/logout/perfil
+│       └── pagina-403.ts         # HTML autocontenido del 403 (proxy)
+│   └── admin/                    # F3-C: dominio del panel (sólo servidor salvo tipos/validación)
+│       ├── tipos.ts              # ProductoAdmin, EntradaProducto, estados, umbral de stock
+│       ├── validacion-producto.ts # validación pura del formulario + slug
+│       ├── imagenes.ts           # magic bytes, almacén local, borrado
+│       ├── repositorio-admin.ts  # CRUD, ocultar, estado, clientes (sin hash)
+│       ├── metricas.ts           # agregados puros + CSV
+│       ├── datos-panel.ts        # carga común del resumen
+│       └── acciones.ts           # "use server": guardar, ocultar, estado (requerirAdmin)
+│   ├── pedidos/                  # F3-D: pedidos (spec 2026-11-05-f3d)
+│   │   ├── estados.ts            # máquina de estados (pura)
+│   │   ├── revision.ts           # revisión del carrito: precio, stock, disponibilidad (pura)
+│   │   ├── whatsapp.ts           # texto del vale + enlace wa.me (puro)
+│   │   ├── repositorio.ts        # creación transaccional, lectura, estados, notificaciones
+│   │   └── acciones.ts           # "use server": revisar/confirmar (cliente), estado y avisos (panel)
+│   ├── reportes/                 # F3-E: ventas (spec 2026-11-05-f3e)
+│   │   ├── agregados.ts          # puro: períodos, cubos en hora de Cuba, top, CSV
+│   │   └── ventas.ts             # pedidos entregados por fecha de entrega; cobrado/por cobrar
+│   ├── ajustes/                  # F3-D: ajustes de la tienda (WhatsApp)
+│   └── moneda/                   # F3-C2: USD ⇄ CUP (spec 2026-11-05-f3c2)
+│       ├── conversion.ts         # puro: CUP = round(USD × tasa), cookie, validación de tasa
+│       ├── repositorio.ts        # tasas_cambio: vigente, guardar, historial
+│       └── acciones.ts           # "use server": guardarTasaAccion (requerirAdmin)
+│
+├── db/                           # PostgreSQL (F3-A): esquema, migraciones y semilla
+│   ├── schema.ts                 # tabla `productos` (Drizzle ORM)
+│   ├── seed.ts                   # npm run db:seed — carga data/ en la BD
+│   └── migraciones/              # SQL generado por drizzle-kit
 │
 ├── data/                         # ⚠️ DATOS DE DEMOSTRACIÓN FICTICIOS
 │   ├── productos.ts              # ~12 productos de ejemplo
@@ -299,6 +351,20 @@ export default defineConfig([
 | `/producto/[slug]` | `app/producto/[slug]/page.tsx` | Server + `generateStaticParams` | Ficha: imagen, precio, notas (salida/corazón/fondo), categoría, relacionados |
 | `/producto` | `app/producto/page.tsx` | Server | `redirect("/catalogo")` |
 | `404` | `app/not-found.tsx` | Server | Página de no encontrado con enlace a catálogo |
+| `/login` | `app/login/page.tsx` | Server + server action | Login (F3-B); respeta `?next=` interno |
+| `/registro` | `app/registro/page.tsx` | Server + server action | Alta de cuenta con auto-login (F3-B) |
+| `/perfil` | `app/perfil/page.tsx` | Server + server action | Nombre y teléfono editables; exige sesión (F3-B) |
+| `/dashboard/**` | `app/dashboard/` | Server, protegida (proxy + layout) | Panel admin F3-C: resumen, productos (CRUD), reportes + CSV, clientes |
+| `/imagenes/[archivo]` | `app/imagenes/[archivo]/route.ts` | Route Handler | Fotos subidas desde el panel |
+| `/dashboard/ajustes` | `app/dashboard/ajustes/page.tsx` | Server, protegida | WhatsApp de la tienda y tasa «CUP por 1 USD» (F3-C2/F3-D); `/dashboard/moneda` redirige aquí |
+| `/dashboard/pedidos`, `/dashboard/pedidos/[numero]` | `app/dashboard/pedidos/` | Server, protegida | Pedidos con filtros; detalle, historial y transiciones (F3-D) |
+| `/dashboard/notificaciones` | `app/dashboard/notificaciones/page.tsx` | Server, protegida | Avisos de pedido nuevo, leída / no leída (F3-D) |
+| `/pedido` | `app/pedido/page.tsx` | Server + cliente, con sesión | Revisión del vale y confirmación (F3-D) |
+| `/pedidos`, `/pedidos/[numero]` | `app/pedidos/` | Server, con sesión | «Mis pedidos» y pedido con enlace de WhatsApp (F3-D) |
+
+> **F3-C2:** `Precio` es componente de cliente y convierte con `components/moneda/MonedaContexto` (inicializado en `app/layout.tsx` con la cookie `peache-moneda` y la tasa vigente). La tienda sólo ve `Producto.disponible`; `lib/catalogo/disponibilidad.ts` decide visibilidad y disponibilidad.
+
+> **F3-B:** `app/layout.tsx` lee la sesión → todas las rutas se renderizan en request (ƒ); `lib/auth` mantiene su propio pool `pg`, independiente del de `lib/catalogo`; la navbar (`Cabecera`/`CuentaAcciones`) refleja el estado de cuenta (invitado/cliente/admin).
 
 Reglas de enrutado Fase 2:
 
@@ -335,7 +401,7 @@ Archivo: `lib/catalogo/tipos.ts`
  * DATOS DE DEMOSTRACIÓN: este tipo es el contrato estable del dominio.
  * Se mantiene idéntico cuando se pase a API real (ver docs/api-contracto.md).
  */
-export type Moneda = "CUP";
+export type Moneda = "USD";
 
 export type OrdenCatalogo =
   | "destacados"
@@ -431,7 +497,7 @@ export const ejemploProducto: Producto = {
   tamano: "100 ml",
   tamanoMl: 100,
   precio: 2500,
-  moneda: "CUP",
+  moneda: "USD",
   descripcion:
     "Fresca, luminosa y ligera: una salida cítrica que se asienta sobre un corazón floral y un fondo cremoso de coco y sándalo. De demostración.",
   notas: {
@@ -453,7 +519,7 @@ Categorías de demo: `mujer`, `hombre`, `unisex`. Cambiar esta taxonomía en el 
 
 ### 6.3 Formato de dinero para Cuba (de demostración)
 
-- Moneda: **CUP**, símbolo `$`, código visible en pantalla: salida **`$2,500 CUP`**.
+- Moneda: **USD**, símbolo `US$`, código visible en pantalla: salida **`US$47.00`** (D5).
 - Formato en `lib/dinero.ts`, usando `Intl.NumberFormat` (verificado en Node 22 del entorno: `Intl.NumberFormat("es-CU")` agrupa con `,` → `2,500`):
 
 ```ts
@@ -461,7 +527,7 @@ import type { Moneda } from "@/lib/catalogo/tipos";
 
 const formateadores = new Map<Moneda, Intl.NumberFormat>();
 
-export function formatearPrecio(precio: number, moneda: Moneda = "CUP"): string {
+export function formatearPrecio(precio: number, moneda: Moneda = "USD"): string {
   let f = formateadores.get(moneda);
   if (!f) {
     f = new Intl.NumberFormat("es-CU", {
@@ -472,11 +538,11 @@ export function formatearPrecio(precio: number, moneda: Moneda = "CUP"): string 
   }
   return `$${f.format(precio)} ${moneda}`;
 }
-// formatearPrecio(2500)      -> "$2,500 CUP"
-// formatearPrecio(2499.5)    -> "$2,499.50 CUP"
+// formatearPrecio(47)        -> "US$47.00"
+// formatearPrecio(12.5)      -> "US$12.50"
 ```
 
-> **Aviso:** el importe es de demostración. La moneda/tarifa real (CUP vs MLC, redondeos, IVA) es una **decisión pendiente** (sección 12). El código admite nuevas `Moneda` añadiendo una literal al type, sin tocar la UI.
+> **Aviso (27/10/2026):** la moneda base es **USD** (D5); la tasa CUP por 1 USD la fija el administrador (F3-C). El dinero se pinta sólo con components/ui/Precio (D-DINERO-1).
 
 ### 6.4 Estrategia de datos Fase 2 y frontera de abstracción
 
@@ -570,7 +636,7 @@ export const repositorioDemo: CatalogoRepositorio = {
 #### Reglas de la frontera (obligatorias)
 
 1. **`app/**` y `components/**` sólo importan `@/lib/catalogo` y `@/lib/dinero`.** Nunca `@/data/*` (bloqueado por ESLint, sección 4.4).
-2. **`data/**` sólo se importa desde `lib/catalogo/repositorio-demo.ts`.**
+2. **`data/**` sólo se importa desde `lib/catalogo/repositorio-demo.ts` y desde `db/seed.ts` (script de desarrollo, no de la app). La UI jamás importa `data/`.**
 3. Todas las funciones devuelven `Promise`: la UI siempre hace `await`. Cambiar a red no toca ni un `await`.
 4. Los tipos de retorno son de **dominio** (`Producto`), no de transporte. Cuando exista API, un mapeador `normalizarProductoApi()` traduce el JSON al tipo `Producto` dentro de `repositorio-api.ts`; si la API cambia, se cambia el mapeador, no la UI.
 5. **No se escriben hoy archivos muertos:** no existe `repositorio-api.ts` ni `app/api/**`. Se crearán cuando exista el backend real, implementando *esta misma interfaz*.
@@ -702,9 +768,9 @@ npm run dev         # revisión manual: /, /catalogo, /producto/inexistente (404
 |---|---|---|---|
 | D1 | **Base de datos** | Coste en USD y forma de pago desde Cuba; latencia percibida desde Cuba; complejidad de backup/restore; escape (exportación); si admite el modelo de catálogo + pedidos; curva del equipo. Candidatas a comparar: Postgres gestionado, SQLite/Postgres en VPS propio, BaaS (p. ej. Supabase/Firebase) | Antes de la Fase 3 (cuando exista API real). **Pendiente de aprobación** |
 | D2 | **Autenticación** | Que funcione sin SMS ni correo transaccional si la entregabilidad en Cuba es dudosa; manejo de contraseñas (hash, reseteo); sesiones vs JWT; roles (cliente/admin) mínimos; coste; si exige servicio externo (riesgo de bloqueo de pago) | Antes de `/cuenta` (Fase 5). **Pendiente de aprobación** |
-| D3 | **Pasarela de pago / cobro** | Qué instrumentos existen y funcionan para clientes en Cuba (tarjetas emitidas localmente, transferencias, MLC, contra entrega); comisiones; idoneidad para el vendedor; cumplimiento; alternativa manual (pedido por WhatsApp + confirmación manual) como fase intermedia | Antes de `/checkout` real (Fase 4). **Pendiente de aprobación** |
+| D3 | **Pasarela de pago / cobro** | Qué instrumentos existen y funcionan para clientes en Cuba (tarjetas emitidas localmente, transferencias, MLC, contra entrega); comisiones; idoneidad para el vendedor; cumplimiento; alternativa manual (pedido por WhatsApp + confirmación manual) como fase intermedia | **Resuelta 05/11/2026:** efectivo contra entrega, sin pasarela ni prepago (ver `docs/decisiones.md` D3). |
 | D4 | **Alojamiento + dominio** | Capacidad de pagar el servicio desde Cuba; latencia desde Cuba y a la audiencia; soporte Next.js (build/ISR/node); HTTPS y dominio propio (.cu vs otro); coste mensual fijo; backup | Antes de la beta pública (tras Fase 2). **Pendiente de aprobación** |
-| D5 | **Moneda y política de precios** | Mostrar CUP, MLC o ambos; redondeos; si los precios incluyen impuesto; quién actualiza precios y con qué frecuencia | Antes de mostrar precios "reales" (inmediatamente antes de sustituir los datos demo) |
+| D5 | **Moneda y política de precios** | **Resuelta 27/10/2026:** moneda base USD; tasa CUP/USD en F3-C. Quedan sólo redondeos/impuestos. Mostrar CUP, MLC o ambos; redondeos; si los precios incluyen impuesto; quién actualiza precios y con qué frecuencia | Antes de mostrar precios "reales" (inmediatamente antes de sustituir los datos demo) |
 | D6 | **Estilos: CSS Modules vs Tailwind** | Decidido **CSS Modules** para Fase 2 (sección 2). Reabrir sólo si `design` justifica utility classes y se acepta instalar `tailwindcss@4.3.3` | Solo si `design` lo pide con justificación |
 | D7 | **Contenido estático y legal** | Aviso de privacidad, condiciones de venta, política de devoluciones, datos de contacto reales | Antes de la beta pública |
 | D8 | **Herramientas de testing** | Coste de mantenimiento de la suite vs. tamaño del equipo; `vitest` para unitarias y `playwright` para E2E son los candidatos (versiones ya consultadas) | Fase 3 (unitarias) / Fase 4 (E2E); **requiere aprobación para instalar** |

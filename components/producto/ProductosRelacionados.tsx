@@ -1,8 +1,7 @@
 import type { Producto } from "@/lib/catalogo";
-import { nombreFamilia } from "@/components/landing/familias";
 import RejillaCatalogo from "@/components/catalogo/RejillaCatalogo";
 import TarjetaProducto from "@/components/catalogo/TarjetaProducto";
-import type { DatosTarjeta } from "@/components/catalogo/TarjetaProducto";
+import { aDatosTarjeta } from "@/components/catalogo/datosTarjeta";
 import styles from "./ProductosRelacionados.module.css";
 
 /**
@@ -12,18 +11,6 @@ import styles from "./ProductosRelacionados.module.css";
  * sin saltos (arquitectura §8). Si la sección viene vacía, no se renderiza.
  */
 
-/** `Producto` del repositorio → datos de la tarjeta (§7), meta «familia · envase». */
-function aTarjeta(producto: Producto): DatosTarjeta {
-  return {
-    slug: producto.slug,
-    nombre: producto.nombre,
-    meta: `${nombreFamilia(producto.familia)} · ${producto.tamano}`,
-    precio: producto.precio,
-    moneda: producto.moneda,
-    novedad: producto.novedad,
-    imagen: producto.imagen,
-  };
-}
 
 export default function ProductosRelacionados({
   productos,
@@ -38,11 +25,11 @@ export default function ProductosRelacionados({
       aria-labelledby="ficha-relacionados"
     >
       <h2 id="ficha-relacionados" className={styles.titulo}>
-        Productos relacionados
+        También te puede gustar
       </h2>
       <RejillaCatalogo>
         {productos.map((producto) => (
-          <TarjetaProducto key={producto.id} producto={aTarjeta(producto)} />
+          <TarjetaProducto key={producto.id} producto={aDatosTarjeta(producto)} />
         ))}
       </RejillaCatalogo>
     </section>

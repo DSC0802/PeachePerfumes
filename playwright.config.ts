@@ -1,5 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Carga variables de .env.local para admin E2E (sin imprimir valores)
+try {
+  process.loadEnvFile(".env.local");
+} catch {
+  // Sin .env.local, los tests de admin se saltan automáticamente
+}
+
 /**
  * Configuración de Playwright — Peache Perfumes (decisión D8 del cliente).
  *
@@ -28,6 +35,8 @@ const URL_BASE = `http://localhost:${PUERTO}`;
 export default defineConfig({
   testDir: "./tests",
   testMatch: "**/*.spec.ts",
+  // Borra los usuarios e2e-…@ejemplo.cu que crean los specs de identidad.
+  globalTeardown: "./tests/limpieza-global.ts",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
@@ -43,11 +52,36 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testIgnore: "**/dashboard.spec.ts",
+    },
+    {
+      // F3-C: el CRUD del panel crea/oculta productos reales en la BD. Corre
+      // DESPUÉS del resto para no alterar los conteos del catálogo que
+      // comprueban los specs de la tienda mientras se ejecutan en paralelo.
+      name: "panel",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/dashboard.spec.ts",
+      dependencies: ["chromium"],
     },
   ],
   webServer: {
+    // `npm run build && npm run start` — artefacto de producción fresco. La
+    // URL del health-check es `/catalogo` (y no `/`): así Playwright espera a
+    // que la ruta DINÁMICA del catálogo responda 200 —lo que fuerza el primer
+    // render SSR, la creación del pool `pg` y el calentamiento de V8— ANTES de
+    // lanzar los 6 workers. Diagnóstico de la regresión no determinista de
+    // F3-A (28/10/2026): con el health-check en `/` (una ruta estática), el
+    // primer render del catálogo se apilaba con el arranque simultáneo de los
+    // 6 Chromium justo tras el build; en esa ventana la CPU del portátil
+    // alcanzaba 95-99 % y las respuestas del server se inflaban (TTFB de
+    // 1,5-3,4 s también en chunks estáticos), de modo que las navegaciones
+    // `toHaveURL` de los specs (presupuesto 5 s) fallaban de forma aleatoria.
+    // Con el health-check en `/catalogo` esas dos cargas frías quedan
+    // desapiladas; los datos de la BD siguen sin fallback: si PostgreSQL está
+    // caído, la ruta nunca responde 200 y el webServer agota su timeout
+    // (comportamiento deseado, spec F3-A §7).
     command: "npm run build && npm run start",
-    url: URL_BASE,
+    url: `${URL_BASE}/catalogo`,
     reuseExistingServer: !process.env.CI,
     // El build de producción puede tardar: margen amplio antes de dar por
     // fallido el arranque.

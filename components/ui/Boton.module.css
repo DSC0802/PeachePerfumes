@@ -1,5 +1,6 @@
 /* §1 de componentes.md — Botón. Sólo tokens; un radio; dos sombras; 3 duraciones. */
 
+/* Revista (2026-11-07): rectángulo de tinta, versalitas espaciadas. */
 .boton {
   display: inline-flex;
   align-items: center;
@@ -8,16 +9,30 @@
   border: var(--border-width) solid transparent;
   border-radius: var(--radius);
   font-family: var(--font-sans);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   line-height: var(--line-height-label);
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color var(--duration-fast) var(--ease-in-out),
-    border-color var(--duration-fast) var(--ease-in-out),
-    color var(--duration-fast) var(--ease-in-out),
-    opacity var(--duration-fast) var(--ease-in-out);
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+
+/* Respuesta táctil al pulsar: confirma que la interfaz «escuchó» (sutil, 0.97). */
+.boton:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 /* Tamaños (medida del control, tabla de componentes.md §1) */
@@ -25,20 +40,20 @@
   /* 36px = --touch-target − --space-2, altura sm de la tabla §1 */
   height: calc(var(--touch-target) - var(--space-2));
   padding: 0 var(--space-3);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
 }
 
 .boton--md {
   height: var(--touch-target);
   padding: 0 var(--space-5);
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-sm);
 }
 
 .boton--lg {
-  /* 48px = --space-8, altura lg de la tabla §1 */
-  height: var(--space-8);
-  padding: 0 var(--space-6);
-  font-size: var(--font-size-body);
+  /* 52px: el botón de compra se lee como el pie de la portada */
+  height: calc(var(--space-8) + var(--space-1));
+  padding: 0 var(--space-7);
+  font-size: var(--font-size-sm);
 }
 
 /* ---------- Variante primario ---------- */
@@ -55,35 +70,39 @@
   background-color: var(--color-accent-active);
 }
 
-/* ---------- Variante secundario ---------- */
+/* ---------- Variante secundario: recuadro de tinta que se entinta al pasar ---------- */
 .boton--secundario {
-  background-color: var(--color-surface);
-  border-color: var(--color-border-strong);
+  background-color: transparent;
+  border-color: var(--color-text);
   color: var(--color-text);
 }
 
 .boton--secundario:hover {
-  background-color: var(--color-surface-alt);
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 .boton--secundario:active {
-  background-color: var(--color-bg-disabled);
+  background-color: var(--color-text-muted);
+  border-color: var(--color-text-muted);
+  color: var(--color-bg);
 }
 
-/* ---------- Variante terciario ---------- */
+/* ---------- Variante terciario: texto subrayado, como un «leer más» ---------- */
 .boton--terciario {
   background-color: transparent;
-  color: var(--color-accent);
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-width);
+  text-underline-offset: 0.45em;
 }
 
 .boton--terciario:hover {
-  background-color: var(--color-accent-subtle);
-  color: var(--color-accent-hover);
+  color: var(--color-text-muted);
 }
 
 .boton--terciario:active {
-  background-color: var(--color-accent-subtle);
-  color: var(--color-accent-active);
+  color: var(--color-text-subtle);
 }
 
 /* ---------- Variante peligro ----------

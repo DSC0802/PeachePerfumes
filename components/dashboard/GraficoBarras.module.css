@@ -1,0 +1,78 @@
+/* Gráficos del panel: barras de tinta, sin redondeos ni color de marca. */
+
+.figura {
+  margin: 0;
+}
+
+/* ---- Horizontal: etiqueta · barra · valor ---- */
+.barras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.etiqueta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valor {
+  min-width: 3ch;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-medium);
+}
+
+/* ---- Vertical: series temporales ---- */
+.columnas {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  height: 12rem;
+}
+
+.columna {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.columna__valor {
+  min-height: 1.2em;
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.columna__pista {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 2.5rem;
+  border-bottom: var(--rule-width) solid var(--color-rule);
+}
+
+.columna__relleno {
+  width: 100%;
+  background-color: var(--color-text);
+}
+
+.columna__etiqueta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

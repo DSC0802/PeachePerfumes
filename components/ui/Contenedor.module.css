@@ -17,3 +17,27 @@
 .contenedor--ancho {
   max-width: var(--container-wide);
 }
+
+/* Página de contenido simple: aire vertical entre banner, contenido y pie. */
+.contenedor--seccion {
+  padding-block: var(--space-7) var(--space-9);
+}
+
+/* Titular de página (carrito, cuenta, pedidos): la serif de la revista
+   sobre un filete grueso. */
+.contenedor--seccion > h1 {
+  margin-block-end: var(--space-6);
+  padding-block-end: var(--space-4);
+  border-block-end: var(--rule-width-strong) solid var(--color-rule);
+  font-size: clamp(2.75rem, 1.8rem + 3.2vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .contenedor--seccion {
+    padding-block: var(--space-9) var(--space-10);
+  }
+}

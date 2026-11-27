@@ -4,8 +4,8 @@
 .marco {
   position: relative;
   overflow: hidden;
-  /* Respaldo mientras carga y frente al fondo oscuro (§14.2) */
-  background-color: var(--color-surface-alt);
+  /* Fondo de estudio: el mismo gris claro detrás de todas las fotos */
+  background-color: var(--color-photo);
 }
 
 /* Recorte fijo por contexto (§14.3) */
@@ -43,11 +43,12 @@
   inset: 0;
   display: grid;
   place-items: center;
-  color: var(--color-brand-provisional);
+  /* Revista: el hueco de la foto es discreto, sin el rosa de marca. */
+  color: var(--color-text-disabled);
 }
 
 .imagotipo {
-  width: 40%;
+  width: 22%;
   height: auto;
 }
 

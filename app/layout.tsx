@@ -1,29 +1,36 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import "./globals.css";
 import Cabecera from "@/components/layout/Cabecera";
+import type { CuentaCabecera } from "@/components/layout/CuentaAcciones";
+import { obtenerSesionActual } from "@/lib/auth/acceso";
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import "./globals.css";
 import PiePagina from "@/components/layout/PiePagina";
 import AvisoDemostracion from "@/components/landing/AvisoDemostracion";
 import { CarritoProveedor } from "@/components/carrito/CarritoContexto";
+import { MonedaProveedor } from "@/components/moneda/MonedaContexto";
+import { cookies } from "next/headers";
+import { leerPreferencia, NOMBRE_COOKIE_MONEDA } from "@/lib/moneda/conversion";
+import { obtenerTasaVigente } from "@/lib/moneda/repositorio";
 
-/**
- * Arquitectura §7.2 — script anti-FOUC síncrono en `<head>`: se ejecuta antes
- * del primer pintado y evita el parpadeo de tema. Clave `peache-theme` con
- * valores `dark` | `light` | `system` (decisiones D-TEMA-1). Sólo si no hay
- * JS previo, el modo claro es el fallback (identidad §10).
- * Copiado literalmente de `docs/arquitectura.md` §7.2 — no reescribir.
- */
-const scriptTema = `(function(){try{
-  var g=localStorage.getItem("peache-theme");
-  if(g!=="dark"&&g!=="light"&&g!=="system") g="system";
-  var oscuro = g==="dark" || (g!=="light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  var el=document.documentElement;
-  el.dataset.theme = oscuro ? "dark" : "light";
-  el.style.colorScheme = oscuro ? "dark" : "light";
-}catch(e){}})();`;
+/* Fuentes OFL autoalojadas (mundo «la revista de perfumes», 2026-11-07).
+   Bodoni Moda: titulares y cabecera. Archivo: texto, interfaz y cifras. */
+const bodoni = localFont({
+  src: "./fonts/BodoniModa-variable-latin.woff2",
+  weight: "400 900",
+  variable: "--fuente-bodoni",
+  display: "swap",
+});
+
+const archivo = localFont({
+  src: "./fonts/Archivo-variable-latin.woff2",
+  weight: "100 900",
+  variable: "--fuente-archivo",
+  display: "swap",
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
+});
 
 export const metadata: Metadata = {
-  // Sin dominio de producción en Fase 1 (decisión D4 pendiente, arquitectura §12)
   metadataBase: new URL("http://localhost:3000"),
   title: {
     default: "Peache Perfumes",
@@ -32,29 +39,49 @@ export const metadata: Metadata = {
   description: "Perfumes seleccionados con cuidado. Catálogo de perfumería Peache Perfumes.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  // Leer sesión para la navbar (convierte TODAS las rutas en dinámicas - esperado D-F3B-DINAMICO)
+  const [usuario, tasaVigente, almacenCookies] = await Promise.all([
+    obtenerSesionActual(),
+    obtenerTasaVigente(),
+    cookies(),
+  ]);
+  // F3-C2: la página llega ya en la moneda elegida (cookie) con la tasa vigente.
+  const monedaInicial = leerPreferencia(almacenCookies.get(NOMBRE_COOKIE_MONEDA)?.value);
+  const tasa = tasaVigente?.cupPorUsd ?? null;
+  const cuenta: CuentaCabecera | null = usuario
+    ? { nombre: usuario.nombre, email: usuario.email, rol: usuario.rol }
+    : null;
+
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className={`${bodoni.variable} ${archivo.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: scriptTema }} />
       </head>
       <body>
+        <MonedaProveedor monedaInicial={monedaInicial} tasa={tasa}>
         <CarritoProveedor>
-          {/* Enlace de salto: primer foco de la página (§3 de componentes.md) */}
           <a href="#contenido" className="saltar-al-contenido">
             Saltar al contenido
           </a>
-          <Cabecera />
-        {/* R3 (decisión del PM): aviso de datos de demostración visible en todo
-            el sitio; vive aquí (una sola copia, sin duplicar) y la portada ya
-            no lo renderiza. */}
-        <AvisoDemostracion />
-        <main id="contenido" tabIndex={-1}>
-          {children}
-        </main>
-        <PiePagina />
+          <Cabecera cuenta={cuenta} />
+          <AvisoDemostracion />
+          <main id="contenido" tabIndex={-1}>
+            {children}
+          </main>
+          <PiePagina />
         </CarritoProveedor>
+        </MonedaProveedor>
       </body>
     </html>
   );
 }
+
+const scriptTema = `(function(){try{
+  var g=localStorage.getItem("peache-theme");
+  if(g!=="dark"&&g!=="light"&&g!=="system") g="system";
+  var oscuro = g==="dark" || (g!=="light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  var el=document.documentElement;
+  el.dataset.theme = oscuro ? "dark" : "light";
+  el.style.colorScheme = oscuro ? "dark" : "light";
+}catch(e){}})();`;

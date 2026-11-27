@@ -1,15 +1,184 @@
-/* Ritmo de la portada: un paso de espacio entre bloques (mobile-first) y
-   aire sobrio antes del pie. Sin estilos propios de sección: cada bloque
-   trae los suyos. */
+/* Portada de la revista. Cabecera y línea de edición entre filetes; debajo,
+   texto a la izquierda y foto a la derecha (≥1024px), apilado en móvil. */
 
 .portada {
-  display: grid;
-  gap: var(--section-gap);
-  padding-block: var(--space-7) var(--space-9);
+  padding-block: var(--space-5) var(--space-10);
+}
+
+/* ---------- Cabecera de la revista ---------- */
+.cabecera {
+  border-bottom: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.masthead {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--font-size-masthead);
+  font-weight: 500;
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text);
+  padding-block: var(--space-3) var(--space-4);
+  /* La cabecera nunca parte la palabra ni provoca scroll lateral. */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.edicion {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-5);
+  padding-block: var(--space-3);
+  border-top: var(--rule-width) solid var(--color-rule);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
 }
 
 @media (min-width: 768px) {
-  .portada {
-    padding-block: var(--space-8) var(--space-10);
+  .edicion {
+    justify-content: space-between;
+  }
+}
+
+/* ---------- Cuerpo ---------- */
+.rejilla,
+.rejillaSola {
+  display: grid;
+  gap: var(--space-8);
+  padding-top: var(--space-8);
+}
+
+.rejilla {
+  grid-template-areas:
+    "texto"
+    "foto"
+    "destacado";
+}
+
+@media (min-width: 1024px) {
+  .rejilla {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "texto foto"
+      "destacado foto";
+    column-gap: var(--space-10);
+    row-gap: 0;
+    padding-top: var(--space-9);
+  }
+}
+
+.texto {
+  grid-area: texto;
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+  justify-items: start;
+}
+
+.titulo {
+  font-size: var(--font-size-display);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  max-width: 12ch;
+  text-wrap: balance;
+}
+
+.entradilla {
+  max-width: 42ch;
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+/* ---------- El perfume en portada ---------- */
+.destacado {
+  grid-area: destacado;
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  align-content: start;
+  width: 100%;
+  padding-top: var(--space-5);
+  border-top: var(--rule-width) solid var(--color-rule);
+}
+
+.marca {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.nombre {
+  font-size: var(--font-size-h1);
+  line-height: 1.05;
+}
+
+.nombre a {
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--duration-slow) var(--ease-out);
+}
+
+.nombre a:hover,
+.nombre a:focus-visible {
+  background-size: 100% 1px;
+}
+
+.meta {
+  max-width: 48ch;
+  color: var(--color-text-muted);
+}
+
+.precio {
+  margin-block: var(--space-2) var(--space-3);
+}
+
+/* ---------- Foto a sangre ---------- */
+.foto {
+  grid-area: foto;
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.marco {
+  aspect-ratio: 4 / 5;
+}
+
+.pie {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-label);
+  color: var(--color-text-muted);
+}
+
+/* En móvil la foto va tras el titular y llega hasta los bordes. */
+@media (max-width: 1023px) {
+  .foto {
+    margin-inline: calc(-1 * var(--container-padding));
+  }
+
+  .pie {
+    padding-inline: var(--container-padding);
+  }
+}
+
+@media (min-width: 1024px) {
+  .foto {
+    align-self: start;
+  }
+
+  .destacado {
+    margin-top: var(--space-9);
   }
 }

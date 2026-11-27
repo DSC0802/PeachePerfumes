@@ -1,0 +1,222 @@
+/* Páginas que se hojean: pista horizontal con scroll-snap, una página por
+   pantalla. Foto a la izquierda y texto a la derecha (≥1024px). */
+
+.seccion {
+  padding-block: var(--space-10);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+}
+
+.titulo {
+  font-size: var(--font-size-h1);
+}
+
+.controles {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.folio {
+  margin-right: var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.flecha {
+  display: inline-grid;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  background: transparent;
+  border: var(--rule-width) solid var(--color-rule);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.flecha:hover:not(:disabled) {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.flecha:disabled {
+  border-color: var(--color-border);
+  color: var(--color-text-disabled);
+  cursor: default;
+}
+
+/* ---------- Pista ---------- */
+.pista {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.pista::-webkit-scrollbar {
+  display: none;
+}
+
+.pagina {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.interior {
+  display: grid;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+@media (min-width: 1024px) {
+  .interior {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: var(--space-10);
+    align-items: center;
+  }
+}
+
+.foto {
+  aspect-ratio: 4 / 5;
+}
+
+@media (max-width: 1023px) {
+  .foto {
+    margin-inline: calc(-1 * var(--container-padding));
+  }
+}
+
+.texto {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  align-content: center;
+}
+
+.numero {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h2);
+  line-height: 1;
+  color: var(--color-text-subtle);
+}
+
+.marca {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* El perfume siempre es el titular mayor de su página. */
+.nombre {
+  font-size: var(--font-size-display);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.nombre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nombre a:hover,
+.nombre a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+.descripcion {
+  max-width: 44ch;
+  font-size: var(--font-size-body-lg);
+  color: var(--color-text-muted);
+}
+
+.datos {
+  display: grid;
+  width: 100%;
+  max-width: 28rem;
+  margin: var(--space-2) 0;
+  border-top: var(--rule-width) solid var(--color-rule);
+}
+
+.datos > div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.datos dt {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  align-self: center;
+}
+
+.datos dd {
+  margin: 0;
+}
+
+/* ---------- Pasar la página ----------
+   Al entrar, el texto de la página sube y aparece; la foto ya se ve por el
+   propio desplazamiento. Sólo se anima la entrada (transform y opacity): la
+   página que sale ya se está yendo de la pantalla, así que su texto se
+   oculta al instante y visibility lo saca del foco y de la lectura. */
+.texto > * {
+  transition:
+    opacity var(--duration-page) var(--ease-out),
+    transform var(--duration-page) var(--ease-out);
+}
+
+.seccion[data-listo] .pagina:not([data-actual]) .texto > * {
+  opacity: 0;
+  transform: translateY(var(--space-4));
+  visibility: hidden;
+  transition: none;
+}
+
+.pagina[data-actual] .texto > :nth-child(2) { transition-delay: 40ms; }
+.pagina[data-actual] .texto > :nth-child(3) { transition-delay: 80ms; }
+.pagina[data-actual] .texto > :nth-child(n + 4) { transition-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pista {
+    scroll-behavior: auto;
+  }
+
+  .texto > * {
+    transition: none;
+  }
+
+  .seccion[data-listo] .pagina:not([data-actual]) .texto > * {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+}

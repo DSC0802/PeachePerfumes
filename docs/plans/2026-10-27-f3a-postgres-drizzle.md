@@ -1112,6 +1112,10 @@ git log --oneline     # → C1..C7 visibles sobre los 3 previos
 
 **Criterio de terminado:** los 5 gates en exit 0 con sus salidas literales + evidencia de idempotencia + árbol limpio. Eso se entrega al cliente en el resumen final.
 
+> **Nota de ejecución (28/10/2026):** el gate de Playwright falló de forma **no determinista** en su primera ejecución (3 failed/16 passed; en aislamiento, 1 failed/5 passed con otro test distinto). Diagnóstico con mediciones (traces, `pg_stat_activity`, observador de CPU): la causa raíz fue el **health-check del `webServer` apuntando a `/` (ruta estática)** — Playwright daba por listo el servidor antes del primer render dinámico, y el arranque simultáneo de los 6 workers justo tras el build (CPU 95-99 %, TTFB 1,5-3,4 s en esa ventana) hacía fallar al azar las aserciones `toHaveURL` de 5 s. Pool `pg max:5`, `next/image` y los 404 de imágenes se midieron y **descartaron** como causa. Corrección mínima: `webServer.url` → `${URL_BASE}/catalogo` (desapila las dos cargas frías; sin BD la ruta no responde 200 y el fallo sigue siendo ruidoso, spec §7). Ningún test, aserción, `retries` ni `workers` tocados. Re-ejecución completa de los 5 gates: los 5 en exit 0 (Playwright 19/19 ×2 con build+start frescos).
+
+**→ Commit de la corrección (post-fix):** `playwright.config.ts`. Mensaje: `F3-A: health-check del webServer E2E contra la ruta dinamica del catalogo`
+
 ## 4 · Riesgos conocidos y su manejo
 
 | Riesgo | Manejo |

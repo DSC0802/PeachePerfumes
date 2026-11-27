@@ -2,5 +2,9 @@
    (el pie ya aporta su propio `padding-block`). */
 
 .volver {
-  padding-block-end: var(--space-6);
+  padding-block: var(--space-4) var(--space-9);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
 }

@@ -2,8 +2,8 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * E2E de regresión del flujo de compra con datos de DEMOSTRACIÓN
- * (decisión D8). Sin pagos reales: el CTA «Proceder al pago» es
- * intencionadamente deshabilitado y se comprueba su microcopy literal.
+ * (decisión D8). Sin pago en la web (D3: efectivo al recibir): el CTA del
+ * carrito lleva a «Confirmar pedido» (/pedido, F3-D) y se comprueba su microcopy literal.
  *
  * Cubre: landing → catálogo → filtro `?familia=floral` → búsqueda sin
  * resultados → orden por precio → ficha → añadir al carrito → contador de
@@ -136,7 +136,7 @@ test.describe("Flujo de compra (datos de demostración)", () => {
     );
   });
 
-  test("flujo completo: añadir, cantidad, vaciar y CTA de pago deshabilitado", async ({
+  test("flujo completo: añadir, cantidad, vaciar y CTA «Confirmar pedido»", async ({
     page,
   }) => {
     // Catálogo → ficha de producto (primer resultado del orden por defecto).
@@ -168,7 +168,7 @@ test.describe("Flujo de compra (datos de demostración)", () => {
     });
 
     // Abrir el carrito desde la cabecera: ítem presente + CTA de pago.
-    await test.step("el carrito de cabecera muestra el ítem y el pago deshabilitado", async () => {
+    await test.step("el carrito de cabecera muestra el ítem y «Confirmar pedido»", async () => {
       await page
         .getByRole("button", { name: "Carrito, 1 artículo", exact: true })
         .click();
@@ -183,14 +183,13 @@ test.describe("Flujo de compra (datos de demostración)", () => {
       ).toBeVisible();
 
       // Microcopy LITERAL del código (components/carrito/Carrito.tsx).
-      const pago = dialogo.getByRole("button", {
-        name: "Proceder al pago",
-        exact: true,
-      });
-      await expect(pago).toBeDisabled();
+      // F3-D: el CTA lleva a confirmar el pedido (/pedido).
+      await expect(
+        dialogo.getByRole("link", { name: "Confirmar pedido", exact: true }),
+      ).toHaveAttribute("href", "/pedido");
       await expect(
         dialogo.getByText(
-          "La compra online estará disponible próximamente. Contáctanos por WhatsApp.",
+          "Pagas en efectivo al recibirlo. Al confirmar, nos envías el vale por WhatsApp para acordar la entrega.",
           { exact: true },
         ),
       ).toBeVisible();

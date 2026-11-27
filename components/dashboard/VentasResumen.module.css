@@ -1,0 +1,38 @@
+.ventas {
+  display: grid;
+  gap: var(--space-5);
+  margin-block-end: var(--space-8);
+}
+
+.cifras {
+  display: grid;
+  gap: var(--space-6) var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+
+/* Importe dentro de la tarjeta KPI: USD grande, CUP debajo. */
+.importe {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.importe data {
+  font-size: inherit;
+}
+
+.importe > span {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+}
+
+.enlace {
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Sin ventas todavía: una línea dentro de la retícula de filetes, sin icono. */
+.sinVentas {
+  display: grid;
+  gap: var(--space-2);
+}

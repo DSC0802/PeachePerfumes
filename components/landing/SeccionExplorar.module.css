@@ -1,81 +1,153 @@
-/* Navegación de portada a /catalogo?categoria=… y ?familia=… — mismo
-   lenguaje de chip que los filtros de §2.1 (surface + border-strong,
-   activo acento), pero como enlace: subrayado no hace falta porque el
-   borde ya lo separa, y el color de acento al pasar indica "navega". */
+/* Índice de la revista: filas entre filetes, cada una un enlace al catálogo
+   filtrado por familia. */
 
 .seccion {
+  padding-block: var(--space-10);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.cabecera {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .cabecera {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: var(--space-8);
+  }
 }
 
 .titulo {
-  font-family: var(--font-serif);
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-h3);
-  line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-text);
+  font-size: var(--font-size-h1);
 }
 
-.entradilla {
-  max-width: var(--container-narrow);
-  line-height: var(--line-height-body);
+.apoyo {
+  max-width: 52ch;
   color: var(--color-text-muted);
 }
 
-.grupo {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.subtitulo {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-label);
-  letter-spacing: var(--letter-spacing-wide);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-.lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+.indice {
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: var(--rule-width) solid var(--color-rule);
 }
 
-.chip {
+.fila {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    "orden nombre total"
+    ". notas notas";
+  align-items: baseline;
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  padding-block: var(--space-4);
+  border-bottom: var(--rule-width) solid var(--color-border);
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .fila {
+    grid-template-columns: 3rem minmax(10rem, 0.9fr) minmax(0, 1.5fr) auto auto;
+    grid-template-areas: "orden nombre notas total flecha";
+    padding-block: var(--space-5);
+  }
+}
+
+.orden {
+  grid-area: orden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-subtle);
+}
+
+.nombre {
+  grid-area: nombre;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: var(--font-size-h2);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  justify-self: start;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--duration-slow) var(--ease-out);
+}
+
+.notas {
+  grid-area: notas;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.total {
+  grid-area: total;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.flecha {
+  display: none;
+  grid-area: flecha;
+  align-self: center;
+  color: var(--color-text);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .flecha {
+    display: block;
+  }
+}
+
+.fila:hover .nombre,
+.fila:focus-visible .nombre {
+  background-size: 100% 1px;
+}
+
+.fila:hover .flecha,
+.fila:focus-visible .flecha {
+  transform: translateX(4px);
+}
+
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.categoriasRotulo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.categoria {
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-target);
-  padding: 0 var(--space-4);
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
   color: var(--color-text);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-medium);
-  text-decoration: none;
-  transition:
-    background-color var(--duration-fast) var(--ease-in-out),
-    border-color var(--duration-fast) var(--ease-in-out),
-    color var(--duration-fast) var(--ease-in-out),
-    transform var(--duration-fast) var(--ease-in-out);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
 }
 
-.chip:hover {
-  background-color: var(--color-surface-alt);
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (prefers-reduced-motion: reduce) {
+  .nombre,
+  .flecha {
+    transition: none;
+  }
 }
-
-/* Elemento no crítico: escala mínima permitida por identidad §12 */
-.chip:active {
-  transform: scale(0.99);
-}
-
-/* :visited queda igual (regla §3: el acento ya identifica al enlace);
-   el anillo de foco lo aplica globals.css. */

@@ -408,20 +408,20 @@ que la navegación por encabezados anuncie el estado; la acción es un `<button>
 new Intl.NumberFormat("es-CU", { style: "currency", currency: moneda /* dato del producto */ })
 ```
 
-Ejemplo con `CUP`: **`$1,250.00`**. El separador, símbolo y decimales los decide la
+Ejemplo con `USD`: **`US$47.00`**. El separador, símbolo y decimales los decide la
 librería (nunca concatenar `"$" + precio`).
 
 **Anatomía**
 
 ```html
-<p class="precio"><data value="1250.00">$1,250.00</data><span class="sr-only"> CUP</span></p>
+<p class="precio"><data value="47.00">US$47.00</data><span class="sr-only"> USD</span></p>
 ```
 
 - `<data value>`: valor machine-readable sin depender del formato.
 - La unidad se añade `sr-only` porque el símbolo `$` es ambiguo (USD/CUP/MLC) y el
   lector de pantalla no lee el formato de `Intl` como moneda.
-- **Decisión para el PM**: moneda por defecto de la tienda = `CUP` (supuesto de Fase 2,
-  confirmar; el dato `moneda` por producto lo permite cambiar sin tocar UI).
+- **Resuelta (D5, 27/10/2026): moneda base = USD.** El conmutador USD ⇄ CUP y la
+  tasa CUP por 1 USD son F3-C.
 
 **Tokens**
 

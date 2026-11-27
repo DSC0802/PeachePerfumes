@@ -20,7 +20,7 @@
 }
 
 .titulo {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-h3);
   line-height: var(--line-height-heading);

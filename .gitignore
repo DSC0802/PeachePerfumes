@@ -1,3 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Impeccable reports
+.impeccable/
+
+# Claude local files
+.claude/
+
 # Dependencias
 node_modules/
 .pnp
@@ -24,6 +34,9 @@ yarn-error.log*
 .env.local
 .env*.local
 
+# Fotos subidas desde el panel admin (F3-C, D-F3C-IMAGENES)
+almacen/
+
 # Editor
 .vscode/*
 !.vscode/extensions.json
@@ -38,3 +51,6 @@ blob-report/
 
 # OpenCode
 .opencode/
+
+# Motor de Impeccable: binario de ~20 MB, se reinstala con `npx impeccable install`
+.claude/skills/impeccable/scripts/bin/

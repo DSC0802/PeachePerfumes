@@ -1,0 +1,50 @@
+/* KPI del panel. Revista sobria: sin caja ni sombra; un filete de tinta
+   abre cada cifra, rótulo en versalitas y la cifra grande en tabulares.
+   Sin colores por tono: sólo «aviso» tiñe la cifra (stock bajo, sin confirmar). */
+
+.tarjeta {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding-block-start: var(--space-3);
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-label);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.valor {
+  font-family: var(--font-sans);
+  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.tarjeta--aviso .valor {
+  font-weight: var(--font-weight-medium);
+}
+
+/* <Precio> dentro del KPI hereda tamaño, peso y color de la cifra. */
+.valor p {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.detalle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

@@ -17,10 +17,12 @@ const ENLACES = [
 export default function PiePagina() {
   return (
     <footer className={styles.pie}>
-      <Contenedor className={styles.interior}>
+      <Contenedor ancho="ancho" className={styles.interior}>
         <div className={styles.marca}>
           <Marca />
-          <p className={styles.lineaDescriptiva}>Perfumes seleccionados con cuidado.</p>
+          <p className={styles.lineaDescriptiva}>
+            Perfumes originales en Cuba. Pagas en efectivo al recibirlos.
+          </p>
         </div>
 
         <ul className={styles.enlaces}>

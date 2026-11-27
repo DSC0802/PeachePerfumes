@@ -32,15 +32,15 @@
 
 @media (min-width: 1024px) {
   .cuerpo {
-    grid-template-columns: 1.1fr 0.9fr;
-    column-gap: var(--space-6);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: var(--space-10);
     align-items: start;
   }
 }
 
-/* Media `1/1` de §3.2 (sobrescribe el 4/5 de `Skeleton variante="imagen"`) */
+/* Media 4/5, como la foto de la ficha */
 .media {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
 }
 
 .detalle {

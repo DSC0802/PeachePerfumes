@@ -2,19 +2,23 @@
    pegada bajo la cabecera. Par de tokens warning ya validado para el banner
    offline (estados §4.4); el aviso se apoya en texto, no sólo en el color. */
 
+/* Revista: nota del editor en gris, sin banda de color. El aviso lo da el
+   texto, no el color. */
 .aviso {
   border-block-end: var(--border-width) solid var(--color-border);
-  background-color: var(--color-warning-bg);
-  padding-block: var(--space-3);
+  background-color: var(--color-surface-alt);
+  padding-block: var(--space-2);
 }
 
 .texto {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   line-height: var(--line-height-label);
-  color: var(--color-text);
+  color: var(--color-text-muted);
 }
 
 .titulo {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-warning);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
 }

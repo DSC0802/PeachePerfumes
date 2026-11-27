@@ -1,0 +1,13 @@
+.accion {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+/* Reserva su línea para que el aviso no empuje lo de debajo. */
+.aviso {
+  min-height: 1.5em;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-label);
+  color: var(--color-text-muted);
+}

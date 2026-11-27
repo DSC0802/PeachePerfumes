@@ -1,13 +1,20 @@
 /* §10 de componentes.md — Precio. Nunca color de enlace: el precio no navega. */
 
+/* Revista: el precio es la única cifra que «se enciende». Misma sans en
+   tabulares, peso ligero a gran tamaño y siempre en el mismo sitio. */
 .precio {
   color: var(--color-text);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.01em;
   line-height: var(--line-height-tight);
 }
 
 .precio--ficha {
   font-size: var(--font-size-price);
+  font-weight: 300;
+  letter-spacing: -0.02em;
 }
 
 .precio--tarjeta {

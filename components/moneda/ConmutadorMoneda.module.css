@@ -1,0 +1,45 @@
+/* Conmutador de moneda: dos casillas de formulario; la elegida, entintada. */
+
+.conmutador {
+  display: inline-flex;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.opcion {
+  min-width: 44px;
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.opcion + .opcion {
+  border-inline-start: var(--border-width) solid var(--color-border-strong);
+}
+
+.opcion:hover {
+  background-color: var(--color-surface-alt);
+}
+
+.opcion[aria-pressed="true"] {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* Objetivo táctil de 44 px en móvil (WCAG 2.5.8 / PRODUCT.md). */
+@media (pointer: coarse) {
+  .opcion {
+    min-height: var(--touch-target);
+  }
+}

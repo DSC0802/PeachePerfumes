@@ -1,5 +1,11 @@
-/* estados-y-responsividad §2.1.1 — h1 "Catálogo" con tamaño `--font-size-h2`. */
+/* estados-y-responsividad §2.1.1 — h1 «Catálogo». Revista: titular en la
+   serif de la cabecera, sobre un filete grueso. */
 
 .titulo {
-  font-size: var(--font-size-h2);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--rule-width-strong) solid var(--color-rule);
+  font-size: var(--font-size-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }

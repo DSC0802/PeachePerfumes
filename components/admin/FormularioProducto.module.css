@@ -1,0 +1,191 @@
+/* Formulario de producto del panel. Controles nativos (select, textarea,
+   file) con la misma anatomía visual que CampoTexto. Revista sobria: cada
+   grupo lo abre un filete de tinta con su rótulo en versalitas; sin cajas. */
+
+.formulario {
+  display: grid;
+  gap: var(--space-8);
+  max-width: 56rem;
+}
+
+.grupo {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* La leyenda no admite bordes fiables: el filete va en ella como bloque. */
+.grupo legend {
+  float: left;
+  width: 100%;
+  margin-block-end: var(--space-2);
+  padding: var(--space-3) 0 0;
+  border-top: var(--rule-width) solid var(--color-rule);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.grupo legend + * {
+  clear: both;
+}
+
+.columnas,
+.columnas3 {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .columnas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .columnas3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.campo {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+}
+
+.etiqueta {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-label);
+}
+
+.control {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-3);
+  border: var(--rule-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+textarea.control {
+  resize: vertical;
+}
+
+.control:focus-visible {
+  border-color: var(--color-focus);
+}
+
+.control[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.ayuda {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}
+
+.casillas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+}
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  font-size: var(--font-size-sm);
+}
+
+.casilla input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-text);
+}
+
+.foto {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .foto {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.vistaPrevia {
+  display: grid;
+  place-items: center;
+  width: 10rem;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: var(--rule-width) dashed var(--color-border-strong);
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.vistaPrevia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fotoCampos {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.archivo {
+  font: inherit;
+  font-size: var(--font-size-sm);
+  min-height: var(--touch-target);
+  color: var(--color-text-muted);
+}
+
+/* El botón del selector, como un botón secundario: filete de tinta y versalitas. */
+.archivo::file-selector-button {
+  min-height: var(--touch-target);
+  margin-inline-end: var(--space-4);
+  padding: 0 var(--space-5);
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+
+.archivo::file-selector-button:hover {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

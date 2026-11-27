@@ -1,0 +1,198 @@
+/* Shell del panel admin. Móvil: cabecera con conmutador y lista desplegable.
+   Escritorio (≥1024px): índice fijo a la izquierda. Revista sobria: sin caja;
+   el índice lo abre un filete de tinta y la sección activa se marca con tinta,
+   no con el rosa de marca. */
+
+.shell {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  padding-block: var(--space-5) var(--space-9);
+  display: grid;
+  /* minmax(0, 1fr): sin esto la columna crece con la tabla y desborda en móvil. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.lateral {
+  border-top: var(--rule-width-strong) solid var(--color-rule);
+  border-bottom: var(--rule-width) solid var(--color-border);
+}
+
+.lateral__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+}
+
+.lateral__titulo {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.conmutador {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border: var(--rule-width) solid var(--color-border-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.nav {
+  display: none;
+  padding-block-end: var(--space-3);
+}
+
+.nav--abierta {
+  display: block;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.enlace {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-3);
+  border-bottom: var(--rule-width) solid var(--color-border);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a.enlace:hover {
+  color: var(--color-text);
+}
+
+.enlace[aria-current="page"] {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: inset var(--rule-width-strong) 0 0 var(--color-rule);
+}
+
+.enlace--inactivo {
+  color: var(--color-text-subtle);
+  cursor: default;
+}
+
+.icono {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.icono svg {
+  width: 100%;
+  height: 100%;
+}
+
+.insignia {
+  margin-inline-start: auto;
+  padding: 1px var(--space-2);
+  border: var(--rule-width) solid var(--color-border);
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Recuento (pedidos pendientes, notificaciones sin leer): cifra en negativo, tinta. */
+.contador {
+  margin-inline-start: auto;
+  min-width: 1.6em;
+  padding: 1px var(--space-2);
+  border-radius: 999px;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-align: center;
+}
+
+.cuenta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  padding-inline: var(--space-3);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: var(--rule-width) solid var(--color-rule);
+  border-radius: 50%;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cuenta__texto {
+  display: grid;
+  min-width: 0;
+}
+
+.cuenta__nombre {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cuenta__email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.contenido {
+  min-width: 0; /* deja que las tablas hagan scroll propio */
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+    padding-block-start: var(--space-6);
+  }
+
+  .lateral {
+    position: sticky;
+    top: var(--space-5);
+  }
+
+  .conmutador {
+    display: none;
+  }
+
+  .nav {
+    display: block;
+  }
+}
+

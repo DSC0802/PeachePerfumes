@@ -1,3 +1,8 @@
+"use client";
+
+import { useMoneda } from "@/components/moneda/MonedaContexto";
+import { importeVisible } from "@/lib/moneda/conversion";
+import { formatearImporte } from "@/lib/moneda/formato";
 import styles from "./Precio.module.css";
 
 /** §10 de docs/design/componentes.md — Precio. */
@@ -14,32 +19,6 @@ export interface PrecioProps {
   className?: string;
 }
 
-const formateadores = new Map<string, Intl.NumberFormat>();
-
-/**
- * Formato con `Intl.NumberFormat("es-CU", { style: "currency" })` — el
- * separador, símbolo y decimales los decide la librería, nunca concatenar.
- * Si el código de moneda no es válido, se degrada al número sin símbolo.
- */
-function formatear(valor: number, moneda: string): string {
-  let formateador = formateadores.get(moneda);
-  if (!formateador) {
-    try {
-      formateador = new Intl.NumberFormat("es-CU", {
-        style: "currency",
-        currency: moneda,
-      });
-    } catch {
-      formateador = new Intl.NumberFormat("es-CU", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      });
-    }
-    formateadores.set(moneda, formateador);
-  }
-  return formateador.format(valor);
-}
-
 export default function Precio({
   valor,
   moneda = "USD",
@@ -48,14 +27,21 @@ export default function Precio({
   className,
 }: PrecioProps) {
   const clases = [styles.precio, styles[`precio--${variante}`], className].filter(Boolean).join(" ");
-  const formateado = formatear(valor, moneda);
+  // F3-C2 (HU-51/53): único punto de conversión. Los precios llegan en USD
+  // (moneda base); si el visitante eligió CUP y hay tasa, se pinta CUP.
+  const { moneda: preferencia, tasa } = useMoneda();
+  const visible = moneda === "USD" ? importeVisible(valor, preferencia, tasa) : { valor, moneda };
+  const convertido = visible.moneda !== moneda;
+  // «47 500 CUP» / «50,00 USD» (lib/moneda/formato.ts): sin «$» ambiguo.
+  const formateado = formatearImporte(visible.valor, visible.moneda);
+  // En la ficha, al ver CUP se mantiene a la vista el precio base en USD.
+  const notaFinal =
+    nota ?? (convertido && variante === "ficha" ? `≈ ${formatearImporte(valor, moneda)}` : undefined);
 
   return (
     <p className={clases}>
-      <data value={valor.toFixed(2)}>{formateado}</data>
-      {/* El símbolo `$` es ambiguo (USD/CUP/MLC): la unidad se lee aparte */}
-      <span className="solo-lectura"> {moneda}</span>
-      {nota ? <span className={styles.nota}>{nota}</span> : null}
+      <data value={visible.moneda === "CUP" ? String(visible.valor) : visible.valor.toFixed(2)}>{formateado}</data>
+      {notaFinal ? <span className={styles.nota}>{notaFinal}</span> : null}
     </p>
   );
 }
