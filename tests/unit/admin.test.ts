@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   archivoDesdeUrl,
   detectarTipoImagen,
-  nombreArchivoImagen,
-  PATRON_ARCHIVO_IMAGEN,
+  PATRON_ID_IMAGEN,
 } from "@/lib/admin/imagenes";
 import {
   altasPorSemana,
@@ -121,17 +120,17 @@ describe("imágenes: magic bytes y nombres", () => {
     expect(detectarTipoImagen(new Uint8Array([0x52, 0x49, 0x46, 0x46, 0, 0, 0, 0, 0x41, 0x56, 0x49, 0x20]))).toBeNull();
   });
 
-  it("genera nombres uuid.ext que acepta la ruta pública", () => {
-    const nombre = nombreArchivoImagen("webp");
-    expect(PATRON_ARCHIVO_IMAGEN.test(nombre)).toBe(true);
+  it("genera nombres uuid.ext que aceptan el patrón de imagen", () => {
+    const nombre = "0f8fad5b-d9cb-469f-a165-70867728950e.webp";
+    expect(PATRON_ID_IMAGEN.test("0f8fad5b-d9cb-469f-a165-70867728950e")).toBe(true);
   });
 
   it("archivoDesdeUrl sólo reconoce imágenes propias (anti path traversal)", () => {
-    const propio = nombreArchivoImagen("png", "0f8fad5b-d9cb-469f-a165-70867728950e");
-    expect(archivoDesdeUrl(`/imagenes/${propio}`)).toBe(propio);
+    const id = "0f8fad5b-d9cb-469f-a165-70867728950e";
+    expect(archivoDesdeUrl(`/api/imagenes/${id}`)).toBe(id);
     expect(archivoDesdeUrl("/productos/brisa-de-coco.webp")).toBeNull();
-    expect(archivoDesdeUrl("/imagenes/../.env.local")).toBeNull();
-    expect(archivoDesdeUrl("/imagenes/..%2F.env.local")).toBeNull();
+    expect(archivoDesdeUrl("/api/imagenes/../.env.local")).toBeNull();
+    expect(archivoDesdeUrl("/api/imagenes/..%2F.env.local")).toBeNull();
   });
 });
 

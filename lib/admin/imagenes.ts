@@ -6,7 +6,6 @@
  * - En Vercel (serverless) el filesystem es solo lectura, por eso no usamos
  *   `node:fs/promises`; todo vive en PostgreSQL.
  */
-import { randomUUID } from "node:crypto";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
@@ -38,10 +37,10 @@ export function detectarTipoImagen(bytes: Uint8Array): ExtensionImagen | null {
   return null;
 }
 
-/** `/imagenes/<id>` → devuelve el id si es un UUID válido; null para URLs ajenas. */
+/** `/api/imagenes/<id>` → devuelve el id si es un UUID válido; null para URLs ajenas. */
 export function archivoDesdeUrl(src: string): string | null {
   if (!src.startsWith("/api/imagenes/")) return null;
-  const id = src.slice("/imagenes/".length);
+  const id = src.slice("/api/imagenes/".length);
   return PATRON_ID_IMAGEN.test(id) ? id : null;
 }
 

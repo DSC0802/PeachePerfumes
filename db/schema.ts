@@ -5,6 +5,7 @@ import {
   index,
   integer,
   numeric,
+  pgBytea,
   pgEnum,
   pgTable,
   serial,
@@ -75,7 +76,7 @@ export const productos = pgTable(
     imagenSrc: text("imagen_src").notNull(),
     imagenAlt: text("imagen_alt").notNull(),
     // Imagen almacenada en Neon (bytea) para servirla vía API en Vercel
-    imagenDatos: bytea("imagen_datos"),
+    imagenDatos: pgBytea("imagen_datos"),
     imagenTipo: text("imagen_tipo"),
     // NOT NULL: `Producto.categoriaId` es obligatorio en el contrato.
     categoriaId: text("categoria_id")
