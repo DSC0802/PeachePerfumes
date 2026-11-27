@@ -48,7 +48,9 @@ export function archivoDesdeUrl(src: string): string | null {
 }
 
 export function directorioImagenes(): string {
-  return path.resolve(process.env.DIR_IMAGENES ?? path.join("almacen", "imagenes"));
+  return path.resolve(
+    process.env.DIR_IMAGENES ?? path.join(/*turbopackIgnore: true*/ "almacen", "imagenes"),
+  );
 }
 
 export type ResultadoImagen =
@@ -77,5 +79,7 @@ export async function guardarImagen(archivo: File): Promise<ResultadoImagen> {
 export async function borrarImagen(src: string): Promise<void> {
   const archivo = archivoDesdeUrl(src);
   if (!archivo) return;
-  await unlink(path.join(directorioImagenes(), archivo)).catch(() => {});
+  await unlink(
+    path.join(/*turbopackIgnore: true*/ directorioImagenes(), archivo),
+  ).catch(() => {});
 }
