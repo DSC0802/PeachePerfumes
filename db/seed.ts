@@ -97,19 +97,23 @@ async function sembrar(): Promise<void> {
         });
       // estado y oculto toman sus defaults: 'activo' y false (spec §4).
 
-      // ===================== ADMIN (F3-B §8) =====================
+      // ===================== ADMINS (F3-B §8) =====================
       // Upsert idempotente: si el email ya existe, lo promueve a admin
-      // con la contraseña vigente.
-      const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-      const adminPassword = process.env.ADMIN_PASSWORD;
-      if (adminEmail && adminPassword) {
+      // con la contraseña vigente. Soporta dos cuentas: ADMIN_EMAIL/PASSWORD
+      // y opcionalmente ADMIN_EMAIL_2/PASSWORD_2.
+      async function upsertAdmin(emailRaw: string | undefined, passwordRaw: string | undefined, etiqueta: string) {
+        const email = emailRaw?.trim().toLowerCase();
+        if (!email || !passwordRaw) {
+          console.warn(`⚠ Semilla: faltan ${etiqueta} — no se crea esa cuenta admin.`);
+          return;
+        }
         // Importar inline para evitar carga de lib/auth en tiempo de build
         const { hashContrasena } = await import("../lib/auth/contrasena") as typeof import("../lib/auth/contrasena");
-        const passwordHash = await hashContrasena(adminPassword);
+        const passwordHash = await hashContrasena(passwordRaw);
         await transaccion
           .insert(tablaUsuarios)
           .values({
-            email: adminEmail,
+            email,
             passwordHash,
             nombre: "Administrador",
             rol: "admin" as import("../lib/auth/tipos").Rol,
@@ -122,7 +126,11 @@ async function sembrar(): Promise<void> {
               actualizadoEn: new Date(),
             },
           });
+        console.log(`✓ Cuenta admin: ${email}`);
       }
+
+      await upsertAdmin(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD, "ADMIN_EMAIL / ADMIN_PASSWORD");
+      await upsertAdmin(process.env.ADMIN_EMAIL_2, process.env.ADMIN_PASSWORD_2, "ADMIN_EMAIL_2 / ADMIN_PASSWORD_2");
     });
 
     const [totalProductos] = await db
@@ -135,38 +143,6 @@ async function sembrar(): Promise<void> {
     console.log(
       `✓ Semilla aplicada: ${totalProductos.n} productos y ${totalCategorias.n} categorías.`,
     );
-
-    // ===================== ADMIN (F3-B §8) =====================
-    // Upsert idempotente: si el email ya existe, lo promueve a admin
-    // con la contraseña vigente.
-    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (adminEmail && adminPassword) {
-      // Importar inline para evitar carga de lib/auth en tiempo de build
-      const { hashContrasena } = await import("../lib/auth/contrasena") as typeof import("../lib/auth/contrasena");
-      const passwordHash = await hashContrasena(adminPassword);
-      await db
-        .insert(tablaUsuarios)
-        .values({
-          email: adminEmail,
-          passwordHash,
-          nombre: "Administrador",
-          rol: "admin" as import("../lib/auth/tipos").Rol,
-        })
-        .onConflictDoUpdate({
-          target: tablaUsuarios.email,
-          set: {
-            passwordHash,
-            rol: "admin",
-            actualizadoEn: new Date(),
-          },
-        });
-      console.log(`✓ Cuenta admin: ${adminEmail}`);
-    } else {
-      console.warn(
-        "⚠ Semilla: faltan ADMIN_EMAIL o ADMIN_PASSWORD en .env.local — no se crea la cuenta admin.",
-      );
-    }
   } finally {
     await pool.end();
   }
