@@ -58,7 +58,7 @@ async function reemplazar(): Promise<void> {
           destacado: producto.destacado,
           novedad: producto.novedad,
           stock: producto.precio > 0 ? 1 : 0, // placeholder: stock real se fija desde el admin
-          estado: "activo",
+          estado: "activo" as const,
           oculto: false,
         })),
       );
