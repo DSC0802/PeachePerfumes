@@ -121,7 +121,6 @@ describe("imágenes: magic bytes y nombres", () => {
   });
 
   it("genera nombres uuid.ext que aceptan el patrón de imagen", () => {
-    const nombre = "0f8fad5b-d9cb-469f-a165-70867728950e.webp";
     expect(PATRON_ID_IMAGEN.test("0f8fad5b-d9cb-469f-a165-70867728950e")).toBe(true);
   });
 

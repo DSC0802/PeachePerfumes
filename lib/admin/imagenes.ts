@@ -7,9 +7,7 @@
  *   `node:fs/promises`; todo vive en PostgreSQL.
  */
 import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
-import { eq } from "drizzle-orm";
-import { productos as tablaProductos } from "../../db/schema";
+import { neon, sql } from "@neondatabase/serverless";
 
 export const TAMANO_MAXIMO_IMAGEN = 4 * 1024 * 1024; // 4 MB
 
@@ -72,15 +70,16 @@ export async function guardarImagen(
   }
 
   const sql = neon(process.env.DATABASE_URL!);
-  const db = drizzle(sql);
 
-  await db
-    .update(tablaProductos)
-    .set({
-      imagenDatos: bytes,
-      imagenTipo: TIPOS_CONTENIDO[extension],
-    })
-    .where(eq(tablaProductos.id, productoId));
+  // Convertir bytes a hex para PostgreSQL
+  const hex = Buffer.from(bytes).toString("hex");
+
+  await sql`
+    UPDATE productos
+    SET imagen_datos = decode(${hex}, 'hex'),
+        imagen_tipo = ${TIPOS_CONTENIDO[extension]}
+    WHERE id = ${productoId}
+  `;
 
   return { ok: true, src: `/api/imagenes/${productoId}` };
 }
@@ -90,9 +89,10 @@ export async function borrarImagen(src: string): Promise<void> {
   const id = archivoDesdeUrl(src);
   if (!id) return;
   const sql = neon(process.env.DATABASE_URL!);
-  const db = drizzle(sql);
-  await db
-    .update(tablaProductos)
-    .set({ imagenDatos: null, imagenTipo: null })
-    .where(eq(tablaProductos.id, id));
+  await sql`
+    UPDATE productos
+    SET imagen_datos = NULL,
+        imagen_tipo = NULL
+    WHERE id = ${id}
+  `;
 }
