@@ -1,11 +1,11 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  bytea,
   check,
   index,
   integer,
   numeric,
-  pgBytea,
   pgEnum,
   pgTable,
   serial,
