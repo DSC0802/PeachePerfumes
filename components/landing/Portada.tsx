@@ -9,17 +9,6 @@ import BotonAnadir from "./BotonAnadir";
 import Marca from "@/components/ui/Marca";
 import styles from "./Portada.module.css";
 
-/**
- * Primera pantalla, como la portada de una revista: cabecera PEACHE a todo
- * el ancho y línea de edición; a la izquierda el titular y el perfume en
- * portada con su precio y la compra; a la derecha su foto a sangre.
- */
-export interface PortadaProps {
-  titulo: string;
-  entradilla: string;
-  producto: Producto | null;
-}
-
 /** «noviembre de 2026», en la hora de Cuba. */
 function edicion(): string {
   return new Intl.DateTimeFormat("es-ES", {
@@ -27,6 +16,15 @@ function edicion(): string {
     year: "numeric",
     timeZone: "America/Havana",
   }).format(new Date());
+}
+
+export interface PortadaProps {
+  /** Título principal de la sección Inicio. */
+  titulo: string;
+  /** Entradilla con dirección y método de pago. */
+  entradilla: string;
+  /** Perfume con más stock (se muestra a la derecha, a sangre). */
+  producto: Producto | null;
 }
 
 export default function Portada({ titulo, entradilla, producto }: PortadaProps) {
@@ -37,8 +35,9 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
   return (
     <section className={styles.portada} aria-labelledby="portada-titulo">
       <Contenedor ancho="ancho">
+        {/* ---------- Cabecera de la revista ---------- */}
         <div className={styles.cabecera}>
-          <Marca className={styles.marcaLogo} anchoMaximo="260px" />
+          <Marca className={styles.marcaLogo} anchoMaximo="220px" />
           <p className={styles.edicion}>
             <span>Perfumes originales en Cuba</span>
             <span>Edición de {edicion()}</span>
@@ -46,25 +45,42 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
           </p>
         </div>
 
+        {/* ---------- Cuerpo: texto izquierda, foto derecha ---------- */}
         <div className={producto ? styles.rejilla : styles.rejillaSola}>
           <div className={styles.texto}>
+            {/* Kicker / sección (estilo revista) */}
+            <p className={styles.kicker}>Número de este mes</p>
+
+            {/* Título grande */}
             <h1 id="portada-titulo" className={styles.titulo}>
               {titulo}
             </h1>
+
+            {/* Entradilla con dirección y pago */}
             <p className={styles.entradilla}>{entradilla}</p>
+
+            {/* Frase creativa estilo revista */}
+            <p className={styles.lema}>
+              «Elige tu aroma. Te lo llevamos a domicilio. Sin sorpresas en el precio.»
+            </p>
+
             <Boton variante="secundario" tamano="lg" href="/catalogo">
               Ver el catálogo
             </Boton>
           </div>
 
+          {/* ---------- Perfume con más stock, a la derecha ---------- */}
           {producto ? (
+            <>
               <article className={styles.destacado} aria-labelledby="portada-producto">
                 <p className={styles.marca}>{producto.marca}</p>
                 <h2 id="portada-producto" className={styles.nombre}>
                   <Link href={`/producto/${producto.slug}`}>{producto.nombre}</Link>
                 </h2>
                 <p className={styles.meta}>
-                  {nombreFamilia(producto.familia)} · <span className="cifras">{producto.tamano}</span>
+                  {nombreFamilia(producto.familia)} ·
+                  <span className="cifras">{producto.tamano}</span> ·
+                  <span className="cifras">{producto.stock} unidades disponibles</span>
                   {notas ? <> · {notas}</> : null}
                 </p>
                 <Precio
@@ -75,21 +91,20 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
                 />
                 <BotonAnadir producto={producto} />
               </article>
-          ) : null}
 
-          {producto ? (
-            <figure className={styles.foto}>
-              <MarcoImagen
-                variante="ficha"
-                imagen={producto.imagen}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                prioridad
-                className={styles.marco}
-              />
-              <figcaption className={styles.pie}>
-                En portada: {producto.nombre}, de {producto.marca}
-              </figcaption>
-            </figure>
+              <figure className={styles.foto}>
+                <MarcoImagen
+                  variante="ficha"
+                  imagen={producto.imagen}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  prioridad
+                  className={styles.marco}
+                />
+                <figcaption className={styles.pie}>
+                  Más stock disponible: {producto.nombre}, de {producto.marca}
+                </figcaption>
+              </figure>
+            </>
           ) : null}
         </div>
       </Contenedor>

@@ -1,5 +1,8 @@
-/* Portada de la revista. Cabecera y línea de edición entre filetes; debajo,
-   texto a la izquierda y foto a la derecha (≥1024px), apilado en móvil. */
+/* Portada de la revista — Peache Perfumes (2026-11-28).
+   Cabecera con logo, línea de edición entre filetes, texto a la izquierda
+   y perfume con más stock a la derecha (≥1024px), apilado en móvil.
+   Estilo revista: tipografía Acumin para titulares, filetes de tinta,
+   esquinas rectas, movimiento discreto. */
 
 .portada {
   padding-block: var(--space-5) var(--space-10);
@@ -8,10 +11,12 @@
 /* ---------- Cabecera de la revista ---------- */
 .cabecera {
   border-bottom: var(--rule-width-strong) solid var(--color-rule);
+  padding-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .marcaLogo {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .edicion {
@@ -21,6 +26,7 @@
   gap: var(--space-1) var(--space-5);
   padding-block: var(--space-3);
   border-top: var(--rule-width) solid var(--color-rule);
+  border-bottom: var(--rule-width) solid var(--color-rule);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
@@ -38,8 +44,8 @@
 .rejilla,
 .rejillaSola {
   display: grid;
-  gap: var(--space-8);
-  padding-top: var(--space-8);
+  gap: var(--space-10);
+  padding-top: var(--space-6);
 }
 
 .rejilla {
@@ -51,17 +57,17 @@
 
 @media (min-width: 1024px) {
   .rejilla {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "texto foto"
-      "destacado foto";
-    column-gap: var(--space-10);
+    grid-template-columns: 1fr minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: "texto foto";
+    column-gap: var(--space-12);
     row-gap: 0;
     padding-top: var(--space-9);
+    align-items: start;
   }
 }
 
+/* ---------- Texto (izquierda) ---------- */
 .texto {
   grid-area: texto;
   display: grid;
@@ -70,24 +76,53 @@
   justify-items: start;
 }
 
+/* Kicker / sección (estilo revista, encima del título) */
+.kicker {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-brand);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0;
+}
+
+/* Título grande (Acumin Pro) */
 .titulo {
   font-family: var(--font-display-acumin);
   font-size: var(--font-size-display);
   font-weight: 500;
-  line-height: 0.98;
+  line-height: 0.95;
   letter-spacing: -0.02em;
-  max-width: 12ch;
+  max-width: 14ch;
   text-wrap: balance;
+  color: var(--color-text);
+  margin: 0;
 }
 
+/* Entradilla con dirección y pago */
 .entradilla {
-  max-width: 42ch;
+  max-width: 48ch;
   font-size: var(--font-size-body-lg);
   line-height: var(--line-height-body);
   color: var(--color-text-muted);
+  margin: 0;
 }
 
-/* ---------- El perfume en portada ---------- */
+/* Lema / frase creativa estilo revista */
+.lema {
+  max-width: 42ch;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-body-lg);
+  font-style: italic;
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  margin: 0;
+  border-left: var(--rule-width-strong) solid var(--color-accent);
+  padding-left: var(--space-4);
+}
+
+/* ---------- El perfume con más stock (derecha) ---------- */
 .destacado {
   grid-area: destacado;
   display: grid;
@@ -104,11 +139,14 @@
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .nombre {
   font-size: var(--font-size-h1);
   line-height: 1.05;
+  font-family: var(--font-display-acumin);
+  margin: 0;
 }
 
 .nombre a {
@@ -126,13 +164,16 @@
 .meta {
   max-width: 48ch;
   color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+  margin: 0;
 }
 
 .precio {
   margin-block: var(--space-2) var(--space-3);
 }
 
-/* ---------- Foto a sangre ---------- */
+/* ---------- Foto a sangre (derecha) ---------- */
 .foto {
   grid-area: foto;
   margin: 0;
@@ -149,6 +190,7 @@
   font-size: var(--font-size-xs);
   line-height: var(--line-height-label);
   color: var(--color-text-muted);
+  margin: 0;
 }
 
 /* En móvil la foto va tras el titular y llega hasta los bordes. */
@@ -160,6 +202,10 @@
   .pie {
     padding-inline: var(--container-padding);
   }
+
+  .lema {
+    padding-left: var(--space-2);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -169,5 +215,12 @@
 
   .destacado {
     margin-top: var(--space-9);
+  }
+}
+
+/* Movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .nombre a {
+    transition: none;
   }
 }

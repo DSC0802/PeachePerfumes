@@ -17,4 +17,6 @@ export interface CatalogoRepositorio {
   listarCategorias(): Promise<Categoria[]>;
   /** Total que cumplen el filtro; base para paginación futura. */
   contarProductos(filtro?: ProductoFiltro): Promise<number>;
+  /** Producto con más stock disponible (para portada). Devuelve null si no hay. */
+  obtenerProductoConMasStock(): Promise<Producto | null>;
 }

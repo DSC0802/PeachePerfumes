@@ -62,6 +62,8 @@ export interface Producto {
   destacado: boolean;
   /** Llega recientemente; muestra etiqueta "Nuevo". */
   novedad: boolean;
+  /** Unidades disponibles en stock (F3-C). Para el producto en portada. */
+  stock: number;
   /**
    * F3-C2 (HU-27): se puede comprar ahora. `false` = se muestra «Agotado» y no
    * se añade al carrito. Es lo ÚNICO que sale del stock/estado del panel: la

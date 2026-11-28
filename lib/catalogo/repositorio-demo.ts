@@ -56,4 +56,9 @@ export const repositorioDemo: CatalogoRepositorio = {
   async contarProductos(filtro) {
     return aplicarFiltro(productosDemo, categoriasDemo, filtro).length;
   },
+
+  async obtenerProductoConMasStock() {
+    const conStock = productosDemo.filter((p) => p.stock > 0).sort((a, b) => b.stock - a.stock);
+    return conStock.length > 0 ? clonarProducto(conStock[0]) : null;
+  },
 };

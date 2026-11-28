@@ -12,6 +12,7 @@ import type { ProductoDemo } from "@/lib/catalogo/tipos";
  * las imágenes reales se suben desde el panel admin.
  *
  * Precios en USD (moneda base, decisión D5).
+ * Stock: unidades disponibles en tienda.
  */
 export const productos: ProductoDemo[] = [
   {
@@ -38,6 +39,7 @@ export const productos: ProductoDemo[] = [
     familia: "floral",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r002",
@@ -63,6 +65,7 @@ export const productos: ProductoDemo[] = [
     familia: "gourmand",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r003",
@@ -88,6 +91,7 @@ export const productos: ProductoDemo[] = [
     familia: "amaderado",
     destacado: false,
     novedad: false,
+    stock: 5,
   },
   {
     id: "r004",
@@ -113,6 +117,7 @@ export const productos: ProductoDemo[] = [
     familia: "citrico",
     destacado: false,
     novedad: false,
+    stock: 3,
   },
   {
     id: "r005",
@@ -138,6 +143,7 @@ export const productos: ProductoDemo[] = [
     familia: "oriental",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r006",
@@ -163,6 +169,7 @@ export const productos: ProductoDemo[] = [
     familia: "floral",
     destacado: false,
     novedad: false,
+    stock: 2,
   },
   {
     id: "r007",
@@ -188,6 +195,7 @@ export const productos: ProductoDemo[] = [
     familia: "oriental",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r008",
@@ -213,6 +221,7 @@ export const productos: ProductoDemo[] = [
     familia: "floral",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r009",
@@ -238,6 +247,7 @@ export const productos: ProductoDemo[] = [
     familia: "gourmand",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r010",
@@ -263,6 +273,7 @@ export const productos: ProductoDemo[] = [
     familia: "oriental",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r011",
@@ -288,6 +299,7 @@ export const productos: ProductoDemo[] = [
     familia: "gourmand",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r012",
@@ -313,6 +325,7 @@ export const productos: ProductoDemo[] = [
     familia: "gourmand",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r013",
@@ -338,6 +351,7 @@ export const productos: ProductoDemo[] = [
     familia: "gourmand",
     destacado: false,
     novedad: false,
+    stock: 2,
   },
   {
     id: "r014",
@@ -363,6 +377,7 @@ export const productos: ProductoDemo[] = [
     familia: "frutal",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r015",
@@ -388,6 +403,7 @@ export const productos: ProductoDemo[] = [
     familia: "citrico",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
   {
     id: "r016",
@@ -413,5 +429,6 @@ export const productos: ProductoDemo[] = [
     familia: "oriental",
     destacado: false,
     novedad: false,
+    stock: 1,
   },
 ];

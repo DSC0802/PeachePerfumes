@@ -119,4 +119,15 @@ export const repositorioPostgres: CatalogoRepositorio = {
     const filas = await db.select().from(tablaCategorias);
     return filas.map(aCategoria);
   },
+
+  async obtenerProductoConMasStock() {
+    const db = obtenerBase();
+    const filas = await db
+      .select()
+      .from(tablaProductos)
+      .where(condicionVisible)
+      .orderBy(tablaProductos.stock.desc())
+      .limit(1);
+    return filas.length > 0 ? aProducto(filas[0]) : null;
+  },
 };

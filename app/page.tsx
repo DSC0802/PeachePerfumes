@@ -19,11 +19,9 @@ export const metadata: Metadata = {
     "Peache Perfumes: perfumes originales en Cuba con precio publicado y pago en efectivo al recibir.",
 };
 
-/** Perfume de portada: el primer destacado disponible con foto; si ninguno tiene, el primero disponible. */
-function productoDePortada(destacados: Producto[]): Producto | null {
-  const disponibles = destacados.filter((p) => p.disponible);
-  // Sólo las fotos subidas desde el panel viven en /imagenes/.
-  return disponibles.find((p) => p.imagen.src.startsWith("/imagenes/")) ?? disponibles[0] ?? null;
+/** Perfume con más stock disponible (para la portada, a la derecha). */
+async function productoConMasStock(): Promise<Producto | null> {
+  return catalogo.obtenerProductoConMasStock();
 }
 
 /** Recuento y notas más repetidas por familia, a partir del catálogo real. */
@@ -46,20 +44,19 @@ function indiceFamilias(productos: Producto[]): FilaFamilia[] {
 }
 
 export default async function PaginaInicio() {
-  const [destacados, todos, categorias] = await Promise.all([
-    catalogo.listarProductos({ orden: "destacados" }),
+  const [todos, categorias] = await Promise.all([
     catalogo.listarProductos(),
     catalogo.listarCategorias(),
   ]);
-  const enPortada = productoDePortada(destacados);
-  // Las páginas del número: los destacados, sin repetir el de portada.
-  const paginas = destacados.filter((p) => p.slug !== enPortada?.slug).slice(0, LIMITE_PAGINAS);
+  const enPortada = await productoConMasStock();
+  // Las páginas del número: todos los productos sin repetir el de portada.
+  const paginas = todos.filter((p) => p.slug !== enPortada?.slug).slice(0, LIMITE_PAGINAS);
 
   return (
     <>
       <Portada
-        titulo="Perfumes originales. Pagas al recibirlos."
-        entradilla="Precio publicado y pago en efectivo contra entrega: eliges en la web y no adelantas ni un peso."
+        titulo="Perfumes originales."
+        entradilla="Estamos en línea e/ 20 y 22. Precio publicado y pago en efectivo contra entrega."
         producto={enPortada}
       />
 
