@@ -93,7 +93,7 @@
   border-bottom-color: var(--color-text);
 }
 
-/* Redes sociales */
+/* Redes sociales con iconos SVG */
 .redes {
   display: flex;
   flex-direction: column;
@@ -106,6 +106,7 @@
 .enlaceRed {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-3);
   min-height: var(--touch-target);
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing-wide);
@@ -119,10 +120,30 @@
   color: var(--color-accent);
 }
 
+.enlaceRed svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 /* Si no hay URL configurada, mostrar como texto sin enlace (placeholder). */
 .enlaceRed[href="#"] {
   color: var(--color-text-desactivated);
   pointer-events: none;
+}
+
+/* Crédito Sueiro Dev */
+.credito {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  margin: 0;
+}
+
+.credito strong {
+  color: var(--color-text);
 }
 
 /* Colofón: ancho completo, filete superior, copyright y aviso. */

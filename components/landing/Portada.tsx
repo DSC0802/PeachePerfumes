@@ -51,9 +51,10 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
             {/* Kicker / sección (estilo revista) */}
             <p className={styles.kicker}>Número de este mes</p>
 
-            {/* Título grande */}
+            {/* Título grande con "Peache" en rosado y tipografía Acumin */}
             <h1 id="portada-titulo" className={styles.titulo}>
               {titulo}
+              <span className={styles.tituloPeache}>Peache</span>
             </h1>
 
             {/* Entradilla con dirección y pago */}
@@ -61,7 +62,7 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
 
             {/* Frase creativa estilo revista */}
             <p className={styles.lema}>
-              «Elige tu aroma. Te lo llevamos a domicilio. Sin sorpresas en el precio.»
+              «Elige tu aroma. Sin sorpresas en el precio.»
             </p>
 
             <Boton variante="secundario" tamano="lg" href="/catalogo">

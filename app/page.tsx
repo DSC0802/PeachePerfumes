@@ -56,7 +56,7 @@ export default async function PaginaInicio() {
     <>
       <Portada
         titulo="Perfumes originales."
-        entradilla="Estamos en línea e/ 20 y 22. Precio publicado y pago en efectivo contra entrega."
+        entradilla="Estamos en Línea #1265 e/ 20 y 22 (Vedado). Precio publicado y pago en efectivo contra entrega."
         producto={enPortada}
       />
 
