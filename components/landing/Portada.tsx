@@ -51,13 +51,13 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
 
             {/* Título grande con "Peache" como imagen horizontal (logo) */}
             <h1 id="portada-titulo" className={styles.titulo}>
-              {titulo}
-              <img
-                src="/identidadvisual/Peache Versión Horizontal-11.png"
-                alt="Peache"
-                className={styles.logoPeache}
-              />
-            </h1>
+  {titulo}
+  <img
+    src="/identidadvisual/peache-titulo.png"
+    alt="Peache"
+    className={styles.logoPeache}
+  />
+</h1>
 
             {/* Entradilla con dirección y pago */}
             <p className={styles.entradilla}>{entradilla}</p>

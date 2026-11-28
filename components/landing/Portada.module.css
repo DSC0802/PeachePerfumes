@@ -16,7 +16,7 @@
 }
 
 .marcaLogo {
-  display: none;
+  margin-bottom: var(--space-4);
 }
 
 .edicion {
@@ -92,24 +92,25 @@
   font-family: var(--font-display-acumin);
   font-size: var(--font-size-display);
   font-weight: 500;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.02em;
-  max-width: none;
-  text-wrap: nowrap;
+  max-width: 14ch;
+  text-wrap: balance;
   color: var(--color-text);
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  white-space: nowrap;
+  /* sin flex: el logo fluye en la misma frase */
 }
 
-/* "Peache" como imagen horizontal (logo) en rosado, misma altura que el h1 */
+/* Logo "Peache" inline, a la altura de las mayúsculas del titular */
 .logoPeache {
-  height: 1.1em;
-  width: auto;
-  flex-shrink: 0;
   display: inline-block;
+  height: 0.72em;          /* ajusta entre 0.7 y 0.85 según el look */
+  width: auto;
+  vertical-align: baseline;
+  margin-left: 0.15em;
+  /* el logo trae un pequeño descenso en la "P": lo bajamos un pelo */
+  position: relative;
+  top: 0.04em;
 }
 
 /* Entradilla con dirección y pago */
