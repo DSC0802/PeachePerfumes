@@ -84,8 +84,10 @@
   --font-sans: var(--fuente-archivo), system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --font-display: var(--font-serif);
-  /* Wordmark provisional compuesto en HTML con la serif de alto contraste */
-  --font-brand-serif: var(--font-serif);
+  /* Marca: Mergian para el logotipo "Peache" */
+  --font-brand-serif: var(--fuente-mergian), var(--font-serif);
+  /* Titulares y eslóganes: Acumin Pro */
+  --font-display-acumin: var(--fuente-acumin), var(--font-serif);
 
   /* Escala: razón 1.25 (16 → 20 → 25 → 31.25 → 39.06 → 48.83 → 61.04) */
   --font-size-xs: 0.75rem;

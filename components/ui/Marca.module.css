@@ -1,33 +1,54 @@
-/* Wordmark provisional (identidad §1). Sólo tokens de marca: nada de esto es
-   color de UI — el rosa de marca no se usa fuera del logotipo. */
+/* Marca Peache — identidad visual (2026-11-27).
+   Logo horizontal: imagotipo (P) a la izquierda + wordmark "Peache" a la derecha.
+   Sólo tokens de diseño: color de marca, tipografía Mergian para "Peache". */
 
 .marca {
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
-  /* El wordmark es TEXTO real (no una imagen), así que WCAG 1.4.3 le aplica:
-     usa el acento —el rosa de marca oscurecido hasta AA— en vez del rosa
-     provisional, que no llega a 4.5:1 sobre superficies claras.
-     Ratios verificados: 5.35:1 sobre --color-surface (#fff) y 4.59:1 sobre
-     --color-surface-alt en claro; 7.89:1 y 7.30:1 en oscuro. */
-  color: var(--color-accent);
+  gap: var(--space-3);
+  color: var(--color-text);
   line-height: var(--line-height-tight);
 }
 
-.nombre {
-  font-family: var(--font-brand-serif);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-h4);
-  letter-spacing: var(--letter-spacing-tight);
+/* Imagotipo (P estilizada) — a la izquierda */
+.imagotipo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: block;
 }
 
-.linea {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-brand);
-  text-transform: uppercase;
-  /* compensa el espacio fantasma que añade el tracking final, para que la
-     línea quede visualmente centrada */
-  margin-right: calc(var(--letter-spacing-brand) * -1);
+/* Wordmark "Peache" — a la derecha, tipografía Mergian */
+.nombre {
+  font-family: var(--fuente-mergian), var(--font-serif);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-accent);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+/* Tamaños para diferentes contextos */
+.marca--pequena .imagotipo {
+  width: 32px;
+  height: 32px;
+}
+.marca--pequena .nombre {
+  font-size: var(--font-size-h3);
+}
+
+.marca--grande .imagotipo {
+  width: 64px;
+  height: 64px;
+}
+.marca--grande .nombre {
+  font-size: var(--font-size-display);
+}
+
+/* Modo oscuro: el logo PNG tiene fondo transparente, se adapta solo */
+@media (prefers-reduced-motion: reduce) {
+  .marca {
+    transition: none;
+  }
 }
