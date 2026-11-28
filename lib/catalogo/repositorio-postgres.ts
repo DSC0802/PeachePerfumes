@@ -1,4 +1,4 @@
-import { and, eq, ne, not } from "drizzle-orm";
+import { and, desc, eq, ne, not } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import {
@@ -51,6 +51,7 @@ function aProducto(fila: FilaProducto): Producto {
     familia: fila.familia,
     destacado: fila.destacado,
     novedad: fila.novedad,
+    stock: fila.stock,
     // F3-C2 (decisión del cliente): agotado si el admin lo marca o si no hay stock.
     disponible: estaDisponible(fila),
   };
@@ -126,7 +127,7 @@ export const repositorioPostgres: CatalogoRepositorio = {
       .select()
       .from(tablaProductos)
       .where(condicionVisible)
-      .orderBy(tablaProductos.stock.desc())
+      .orderBy(desc(tablaProductos.stock))
       .limit(1);
     return filas.length > 0 ? aProducto(filas[0]) : null;
   },
