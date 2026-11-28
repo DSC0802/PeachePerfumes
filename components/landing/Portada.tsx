@@ -6,6 +6,7 @@ import Contenedor from "@/components/ui/Contenedor";
 import MarcoImagen from "@/components/ui/MarcoImagen";
 import Precio from "@/components/ui/Precio";
 import BotonAnadir from "./BotonAnadir";
+import Marca from "@/components/ui/Marca";
 import styles from "./Portada.module.css";
 
 /**
@@ -37,9 +38,7 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
     <section className={styles.portada} aria-labelledby="portada-titulo">
       <Contenedor ancho="ancho">
         <div className={styles.cabecera}>
-          <p className={styles.masthead} aria-hidden="true">
-            Peache
-          </p>
+          <Marca className={styles.marcaLogo} anchoMaximo="260px" />
           <p className={styles.edicion}>
             <span>Perfumes originales en Cuba</span>
             <span>Edición de {edicion()}</span>

@@ -2,7 +2,7 @@ import styles from "./Marca.module.css";
 
 /**
  * Marca Peache — identidad visual (2026-11-27).
- * Logo horizontal: imagotipo (P) a la izquierda + wordmark "Peache" a la derecha.
+ * Logo horizontal completo (imagotipo + "Peache") en una sola imagen PNG.
  * Se usa en cabecera, footer y donde aparezca la marca.
  * Sin "Joyería" — solo "Peache".
  */
@@ -17,12 +17,11 @@ export default function Marca({ className, anchoMaximo }: MarcaProps) {
   return (
     <span className={clases} style={anchoMaximo ? { maxWidth: anchoMaximo } : undefined}>
       <img
-        src="/identidadvisual/Peache Imagotipo -03.png"
-        alt="Marca Peache"
-        className={styles.imagotipo}
+        src="/identidadvisual/Peache Versión Horizontal-11.png"
+        alt="Peache"
+        className={styles.logo}
         aria-hidden="true"
       />
-      <span className={styles.nombre}>Peache</span>
     </span>
   );
 }

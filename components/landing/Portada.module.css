@@ -10,20 +10,8 @@
   border-bottom: var(--rule-width-strong) solid var(--color-rule);
 }
 
-.masthead {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-size: var(--font-size-masthead);
-  font-weight: 500;
-  line-height: 0.82;
-  letter-spacing: -0.02em;
-  text-align: center;
-  text-transform: uppercase;
-  color: var(--color-text);
-  padding-block: var(--space-3) var(--space-4);
-  /* La cabecera nunca parte la palabra ni provoca scroll lateral. */
-  white-space: nowrap;
-  overflow: hidden;
+.marcaLogo {
+  margin-bottom: var(--space-3);
 }
 
 .edicion {
@@ -83,6 +71,7 @@
 }
 
 .titulo {
+  font-family: var(--font-display-acumin);
   font-size: var(--font-size-display);
   font-weight: 500;
   line-height: 0.98;
