@@ -41,9 +41,7 @@ export async function generateMetadata({
 
   return {
     title: `${producto.marca} ${producto.nombre}`,
-    // D-DESCRIPCION: el aviso de demo es de la UI, no del texto del producto;
-    // aquí sólo se marca la procedencia en la descripción del buscador.
-    description: `${producto.descripcion} Datos de demostración.`,
+    description: producto.descripcion,
   };
 }
 

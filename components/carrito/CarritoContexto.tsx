@@ -9,7 +9,7 @@ import {
 import type { ReactNode } from "react";
 import type { Producto } from "@/lib/catalogo/tipos";
 
-/** Una línea del carrito de demostración. */
+/** Una línea del carrito. */
 export interface ItemCarrito {
   producto: Producto;
   cantidad: number;
@@ -20,7 +20,7 @@ export interface CarritoContextoValor {
   items: ItemCarrito[];
   /** Total de unidades (suma de cantidades). */
   totalItems: number;
-  /** Importe total del carrito en unidades de moneda (demo). */
+  /** Importe total del carrito en unidades de moneda. */
   obtenerTotal: () => number;
   /** Añade un producto (o aumenta su cantidad si ya está). */
   agregarProducto: (producto: Producto, cantidad?: number) => void;

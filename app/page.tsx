@@ -9,21 +9,20 @@ import { FAMILIAS } from "@/components/landing/familias";
 /**
  * Portada (mundo «revista de perfumes», 2026-11-07): portada con el perfume
  * destacado → «En este número», un perfume por página que se hojea →
- * índice por familias → cómo comprar. Datos desde `@/lib/catalogo`; el aviso
- * de demostración vive en `app/layout.tsx`.
+ * índice por familias → cómo comprar. Datos desde `@/lib/catalogo`.
  */
 
 const LIMITE_PAGINAS = 8;
 
 export const metadata: Metadata = {
   description:
-    "Peache Perfumes: perfumes originales en Cuba con precio publicado y pago en efectivo al recibir. Tienda de demostración.",
+    "Peache Perfumes: perfumes originales en Cuba con precio publicado y pago en efectivo al recibir.",
 };
 
 /** Perfume de portada: el primer destacado disponible con foto; si ninguno tiene, el primero disponible. */
 function productoDePortada(destacados: Producto[]): Producto | null {
   const disponibles = destacados.filter((p) => p.disponible);
-  // Sólo las fotos subidas desde el panel viven en /imagenes/; las rutas de la demo no tienen archivo.
+  // Sólo las fotos subidas desde el panel viven en /imagenes/.
   return disponibles.find((p) => p.imagen.src.startsWith("/imagenes/")) ?? disponibles[0] ?? null;
 }
 

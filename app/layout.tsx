@@ -6,7 +6,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import PiePagina from "@/components/layout/PiePagina";
-import AvisoDemostracion from "@/components/landing/AvisoDemostracion";
 import { CarritoProveedor } from "@/components/carrito/CarritoContexto";
 import { MonedaProveedor } from "@/components/moneda/MonedaContexto";
 import { cookies } from "next/headers";
@@ -65,7 +64,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             Saltar al contenido
           </a>
           <Cabecera cuenta={cuenta} />
-          <AvisoDemostracion />
           <main id="contenido" tabIndex={-1}>
             {children}
           </main>

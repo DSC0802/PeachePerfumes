@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Catálogo",
     description:
-      "Todo el catálogo de Peache Perfumes: busca por nombre, filtra por familia olfativa y categoría, y ordénalo por precio o nombre. Datos de demostración.",
+      "Todo el catálogo de Peache Perfumes: busca por nombre, filtra por familia olfativa y categoría, y ordénalo por precio o nombre.",
   };
 }
 

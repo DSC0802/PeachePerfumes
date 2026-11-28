@@ -90,10 +90,6 @@ export default function PiePagina() {
           <p className={styles.copyright}>
             © 2026 Peache Perfumes. Todos los derechos reservados.
           </p>
-          <p className={styles.avisoDemo}>
-            Los perfumes, las marcas, los precios y la disponibilidad son
-            inventados: no corresponden a productos reales.
-          </p>
         </Contenedor>
       </div>
     </footer>
