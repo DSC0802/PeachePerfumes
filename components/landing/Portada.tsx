@@ -6,7 +6,6 @@ import Contenedor from "@/components/ui/Contenedor";
 import MarcoImagen from "@/components/ui/MarcoImagen";
 import Precio from "@/components/ui/Precio";
 import BotonAnadir from "./BotonAnadir";
-import Marca from "@/components/ui/Marca";
 import styles from "./Portada.module.css";
 
 /** «noviembre de 2026», en la hora de Cuba. */
@@ -37,7 +36,6 @@ export default function Portada({ titulo, entradilla, producto }: PortadaProps) 
       <Contenedor ancho="ancho">
         {/* ---------- Cabecera de la revista ---------- */}
         <div className={styles.cabecera}>
-          <Marca className={styles.marcaLogo} anchoMaximo="220px" />
           <p className={styles.edicion}>
             <span>Perfumes originales en Cuba</span>
             <span>Edición de {edicion()}</span>
